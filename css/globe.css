@@ -1,0 +1,87 @@
+/* Globe Container */
+#globe-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: auto;
+    cursor: grab;
+    /* Important pour le positionnement du tooltip si on l'avait mis en absolute dedans, 
+       mais ici on utilise fixed/absolute par rapport à la page/overlay */
+}
+
+#globe-container:active {
+    cursor: grabbing;
+}
+
+#globe-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.sticky-graphic {
+    position: sticky;
+    top: 0;
+    width: 60%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Stat Overlay */
+.stat-container {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Pas d'interaction globale */
+}
+
+/* Tooltip Style */
+.viz-label-continent {
+    position: fixed;
+    /* Fixed pour suivre la souris (clientX/Y) facilement */
+    top: 0;
+    left: 0;
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid var(--accent-red);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+    min-width: 150px;
+    text-align: center;
+}
+
+.viz-label-continent strong {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.viz-label-global {
+    position: absolute;
+    bottom: 5%;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--text-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+}
