@@ -12,7 +12,7 @@ try {
 
     console.log(`Original count: ${movies.length} movies`);
 
-    // 1. Sort by Worldwide revenue (descending)
+    // 1. Trie par revenu du box-office (décroissant)
     movies.sort((a, b) => {
         const revA = parseInt(a['$Worldwide']) || 0;
         const revB = parseInt(b['$Worldwide']) || 0;
@@ -36,7 +36,7 @@ try {
     fs.writeFileSync(backupPath, rawData);
     console.log(`Backup created at ${backupPath}`);
 
-    // Write reduced version
+    // Version  allégé
     fs.writeFileSync(outputPath, JSON.stringify(reducedMovies, null, 2));
     console.log(`Reduced JSON saved to ${outputPath}`);
 
