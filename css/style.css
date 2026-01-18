@@ -1,10 +1,17 @@
+/* --- VARIABLES GLOBALES (Design System) --- */
 :root {
     --bg-color: #0f0f0f;
+    /* Noir profond */
     --text-color: #f0f0f0;
+    /* Blanc cassé */
     --accent-red: #e50914;
+    /* Rouge Netflix/Cinéma */
     --accent-gold: #f5c518;
+    /* Jaune IMDb */
     --font-heading: 'Playfair Display', serif;
+    /* Titres élégants */
     --font-body: 'Outfit', sans-serif;
+    /* Corps de texte moderne */
 }
 
 body {
@@ -16,7 +23,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Typographie */
+/* --- TYPOGRAPHIE --- */
 h1,
 h2,
 h3 {
@@ -46,7 +53,7 @@ p {
     opacity: 0.8;
 }
 
-/* Héros */
+/* --- SECTION HERO (Accueil) --- */
 .hero {
     height: 100vh;
     display: flex;
@@ -90,49 +97,19 @@ p {
     animation: terminator-transform 10s infinite;
 }
 
-/* 
-   Animation du Terminator
-*/
-
+/* --- ANIMATION DU TERMINATOR --- */
+/* On joue sur les ombres et les couleurs pour créer l'effet hologramme */
 @keyframes terminator-transform {
-
-    0%,
-    20% {
-        /* STATE 1: ORIGINAL */
-        filter: drop-shadow(0 0 0 transparent);
-        opacity: 1;
-    }
-
-    25%,
-    40% {
-        /* STATE 2: DARK MODE */
-        filter: drop-shadow(0 0 0 transparent);
-        opacity: 1;
-    }
-
-    45%,
-    75% {
-        /* STATE 3: RED HOLOGRAM */
-        /* Apply overall red glow and holographic feel */
-        filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.8)) sepia(100%) hue-rotate(-50deg) saturate(600%);
-        opacity: 0.9;
-    }
-
-    80%,
-    100% {
-        /* RETURN TO ORIGINAL */
-        filter: drop-shadow(0 0 0 transparent);
-        opacity: 1;
-    }
+    ...
 }
 
-/* Base paths (Body) animation */
+/* On anime chaque chemin (path) du SVG individuellement */
 .terminator-svg path {
     transition: all 0.5s ease;
     animation: body-pulse 10s infinite;
 }
 
-/* The Eye needs its own timeline to scintillate and match the phases */
+/* Animation spécifique pour l'œil (scintillement rouge) */
 #terminator-eye {
     animation: eye-pulse 10s infinite;
 }
@@ -268,13 +245,13 @@ p {
     }
 }
 
-/* Mise en page Scrolly */
+/* --- MISE EN PAGE SCROLLYTELLING --- */
 .scrolly-container {
     position: relative;
     display: flex;
-    /* Sur desktop : graphique gauche/centre, texte superposé ou sur le côté */
 }
 
+/* L'élément qui reste fixé à gauche pendant le défilement */
 .sticky-graphic {
     position: sticky;
     top: 0;
@@ -284,7 +261,7 @@ p {
     align-items: center;
     justify-content: center;
     z-index: 1;
-    /* Sous le texte */
+    overflow: hidden;
 }
 
 #viz {
@@ -293,29 +270,31 @@ p {
     /* border: 1px solid #333; Debug */
 }
 
+/* La colonne des textes qui défilent à droite */
 .scrolly-steps {
     position: relative;
     width: 40%;
     z-index: 2;
     margin-left: auto;
-    /* Pousser vers la droite */
     background: linear-gradient(90deg, transparent, rgba(15, 15, 15, 0.8) 20%);
 }
 
+/* Chaque bloc de texte (étape) */
 .step {
     min-height: 80vh;
-    /* hauteur de chaque étape */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
     box-sizing: border-box;
     opacity: 0.3;
+    /* Presque invisible quand pas actif */
     transition: opacity 0.5s;
 }
 
 .step.active {
     opacity: 1;
+    /* Bien visible quand actif */
 }
 
 .step-content {
@@ -369,8 +348,8 @@ p {
     /* Overlay Layout */
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 15%;
+    width: 60rem;
     height: 100%;
     /* Scaling & Positioning */
     transform: scale(1.15) translateX(-10%);

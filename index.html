@@ -2,14 +2,17 @@
 <html lang="fr">
 
 <head>
+    <!-- Configuration de base et polices -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinéma Box-Office - L'Analytique</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Importation des polices Outfit (moderne) et Playfair (élégant) -->
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
+    <!-- Feuilles de style (Design global + Spécificités globe) -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/globe.css">
     <link rel="shortcut icon" type="image/svg" href="/img/svg/objets/photo-camera-picture-svgrepo-com.svg" />
@@ -17,10 +20,11 @@
 
 <body>
 
+    <!-- Section d'accueil (Hero) -->
     <header class="hero">
         <div class="hero-content">
             <div class="hero-graphic">
-                <!-- Terminator Skull SVG (Inline for styling) -->
+                <!-- SVG du crâne de Terminator (Inline pour pouvoir l'animer en CSS) -->
                 <svg class="terminator-svg" viewBox="0 0 317.5 158.75" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(0,-217.62501)">
                         <path
@@ -1177,6 +1181,7 @@
 
     </main>
 
+    <!-- Point d'entrée de notre script (chargé en module pour les import/export) -->
     <script type="module" src="./js/script.js"></script>
 </body>
 

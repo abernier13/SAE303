@@ -1,4 +1,4 @@
-/* Globe Container */
+/* --- LE CONTENEUR DU GLOBE 3D --- */
 #globe-container {
     position: absolute;
     top: 50%;
@@ -11,8 +11,7 @@
     transition: opacity 0.5s ease;
     pointer-events: auto;
     cursor: grab;
-    /* Important pour le positionnement du tooltip si on l'avait mis en absolute dedans, 
-       mais ici on utilise fixed/absolute par rapport à la page/overlay */
+    /* Curseur main pour indiquer qu'on peut faire tourner */
 }
 
 #globe-container:active {
@@ -44,10 +43,10 @@
     /* Pas d'interaction globale */
 }
 
-/* Tooltip Style */
+/* --- LE TOOLTIP (Info sur le continent) --- */
 .viz-label-continent {
     position: fixed;
-    /* Fixed pour suivre la souris (clientX/Y) facilement */
+    /* Il suit la souris partout sur l'écran */
     top: 0;
     left: 0;
     background: rgba(15, 15, 15, 0.95);
@@ -59,6 +58,7 @@
     color: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     pointer-events: none;
+    /* Ne doit pas gêner le clic sur le globe */
     opacity: 0;
     transition: opacity 0.2s ease;
     z-index: 1000;
