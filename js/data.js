@@ -1,8 +1,8 @@
-// C'est ici que toute la "cuisine" de données se passe.
-// On récupère le JSON gros et moche, et on en sort des chiffres propres pour nos graphiques.
+// Traitement du fichier JSON.
+
 import { CONTINENT_MAP } from './constants.js';
 
-// Cet objet est notre "source de vérité". Il est mis à jour après le chargement
+// Initialisation des variables
 export let vizData = {
     totalRevenue: 0,
     avgDomestic: 0,
@@ -24,7 +24,7 @@ export async function loadData() {
     return data;
 }
 
-// Le gros morceau : on parcourt tous les films pour accumuler les stats
+// Parcour de tous les films pour récupérer leurs données
 function processAllData(data) {
     if (!data) return;
     // On s'assure d'avoir un tableau, peu importe la structure du JSON
@@ -42,7 +42,7 @@ function processAllData(data) {
     const genreStats = {};
 
     movies.forEach(movie => {
-        // On extrait les valeurs importantes (avec une sécurité si c'est vide)
+        // On extrait les valeurs importantes 
         const world = parseInt(movie['$Worldwide']) || 0;
         const dom = parseFloat(movie['Domestic %']) || 0;
         const foreign = parseFloat(movie['Foreign %']) || 0;

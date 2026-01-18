@@ -64,7 +64,7 @@ export function updatePopcornUI(genres) {
                 textEl.style.textShadow = "0px 2px 4px rgba(0,0,0,0.3)";
                 textEl.style.opacity = "0";
 
-                // Format final : GENRE  •  TOP FILM  •  $REVENU
+                // Format final : GENRE - TOP FILM - REVENU 
                 const revenueBillions = (genre.totalRevenue / 1000000000).toFixed(1) + " Mrd";
                 textEl.textContent = `${genre.name.toUpperCase()}  •  ${genre.topMovie.title}  •  $${revenueBillions}`;
                 rectGroup.appendChild(textEl);

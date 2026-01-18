@@ -1,4 +1,4 @@
-// Ce fichier sert de "coffre-fort" pour toutes les données statiques qui prendraient trop de place ailleurs.
+// Ce fichier regroupe toutes les données statiques qui prendraient trop de place ailleurs.
 // On y trouve les coordonnées pour le globe, les mappings de pays et les chemins SVG complexes.
 
 // Points GPS (Lat, Lon) pour dessiner l'effet "néon" sur les continents au survol

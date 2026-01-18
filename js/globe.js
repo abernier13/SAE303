@@ -92,7 +92,7 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         container.style.cursor = 'grab';
     });
 
-    // Le gros morceau : calculer où la souris se trouve sur la sphère
+    // Calcule où la souris se trouve sur la sphère
     container.addEventListener('pointermove', (e) => {
         // Rotation manuelle
         if (pointerInteracting !== null) {
@@ -127,7 +127,7 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
             const mouseLatRad = -Math.asin(globeY);
             const mouseLatDeg = mouseLatRad * (180 / Math.PI);
 
-            // On vérifie si on est dans les "boîtes" (zones) de nos continents
+            // On vérifie si on est dans les zones de nos continents
             let hovered = null;
             if (mouseLonDeg > -130 && mouseLonDeg < -35 && mouseLatDeg > -55 && mouseLatDeg < 70) {
                 hovered = "Amerique";

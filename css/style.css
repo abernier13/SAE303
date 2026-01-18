@@ -9,9 +9,7 @@
     --accent-gold: #f5c518;
     /* Jaune IMDb */
     --font-heading: 'Playfair Display', serif;
-    /* Titres élégants */
     --font-body: 'Outfit', sans-serif;
-    /* Corps de texte moderne */
 }
 
 body {
@@ -68,17 +66,13 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Center the whole block */
     gap: 3rem;
-    /* Increase gap for breathing room */
     max-width: 1400px;
-    /* Wider container */
     width: 90%;
 }
 
 .hero-graphic {
     flex: 0 0 45%;
-    /* Fixed width, don't grow indefinitely */
     display: flex;
     justify-content: flex-end;
 }
@@ -91,17 +85,11 @@ p {
     width: 100%;
     max-width: 600px;
     height: auto;
-    /* Initial State: Visible Original Design */
     opacity: 1;
-    /* Removed 'alternate' to allow full 0-100 control loop */
     animation: terminator-transform 10s infinite;
 }
 
 /* --- ANIMATION DU TERMINATOR --- */
-/* On joue sur les ombres et les couleurs pour créer l'effet hologramme */
-@keyframes terminator-transform {
-    ...
-}
 
 /* On anime chaque chemin (path) du SVG individuellement */
 .terminator-svg path {
@@ -121,7 +109,6 @@ p {
     20% {
         stroke-width: 0;
         fill-opacity: 1;
-        /* fill: auto; Default to inline styles */
     }
 
     /* 25-40%: Dark Mode (Black) */
@@ -222,7 +209,6 @@ p {
     opacity: 0.5;
     animation: bounce 2s infinite;
     text-align: center;
-    /* Keep centered roughly */
     width: 100%;
 }
 
@@ -341,23 +327,21 @@ p {
     }
 }
 
-/* Popcorn Graphic Specifics */
+/* Graphique Popcorn */
 #popcorn-container {
     opacity: 0;
     transition: opacity 0.5s ease;
-    /* Overlay Layout */
+    /* Zone d'overlay */
     position: absolute;
     top: 0;
     left: 15%;
     width: 60rem;
     height: 100%;
-    /* Scaling & Positioning */
+    /* Position et échelle */
     transform: scale(1.15) translateX(-10%);
     display: flex;
     justify-content: center;
-    /* Or flex-start if needed */
     align-items: center;
     pointer-events: none;
-    /* Let clicks pass through to globe if needed */
     z-index: 5;
 }

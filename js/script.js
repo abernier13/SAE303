@@ -1,6 +1,5 @@
-// --- POINT D'ENTRÉE PRINCIPAL DU PROJET --- //
-// Ce fichier est le "chef d'orchestre". Il importe les petits modules spécialisés 
-// (data, globe, popcorn, constants) et les fait travailler ensemble.
+// Ce fichier importe les petits modules spécialisés (anime.js, globe 3D)
+
 import { animate, createTimeline } from 'https://esm.sh/animejs@4.2.2';
 import { pathStarWars, pathStar } from './constants.js';
 import { vizData, loadData } from './data.js';
