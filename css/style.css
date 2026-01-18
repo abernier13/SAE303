@@ -79,6 +79,11 @@ p {
 
 .hero-text {
     flex: 0 0 45%;
+
+    p {
+        margin-left: 5rem;
+        margin-right: 5rem;
+    }
 }
 
 .terminator-svg {

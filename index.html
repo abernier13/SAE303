@@ -221,19 +221,13 @@
             <div id="globe-container">
                 <canvas id="globe-canvas"></canvas>
             </div>
-            <svg id="viz" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
-                <!-- Defs for gradients etc -->
+            <!-- On sort les labels du SVG pour qu'ils soient toujours au-dessus, sans risque de clipping -->
+            <div id="label-continent" class="viz-label-continent">Survolez un continent</div>
+            <div id="label-global" class="viz-label-global"></div>
 
+            <svg id="viz" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
                 <!-- innovative-shape path will be morphed -->
                 <path id="morph-path" d="" />
-
-                <!-- Overlay pour les stats (HTML over SVG) -->
-                <foreignObject x="0" y="0" width="800" height="600" id="stat-overlay" style="pointer-events: none;">
-                    <div xmlns="http://www.w3.org/1999/xhtml" class="stat-container">
-                        <div id="label-continent" class="viz-label-continent">Survolez un continent</div>
-                        <div id="label-global" class="viz-label-global"></div>
-                    </div>
-                </foreignObject>
 
                 <text id="viz-label" x="400" y="550" text-anchor="middle" class="viz-text"
                     style="display: none;"></text>
