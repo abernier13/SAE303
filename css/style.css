@@ -358,6 +358,8 @@ p {
     background-color: #ff0000;
     width: fit-content;
     border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
 
     a {
         text-decoration: none;

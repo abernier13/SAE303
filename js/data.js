@@ -106,10 +106,10 @@ function processAllData(data) {
     vizData.continents.Europe = (continentTotals.Europe / 1000000000).toFixed(1);
     vizData.continents.Asie = (continentTotals.Asie / 1000000000).toFixed(1);
 
-    // On tire les 4 meilleurs genres pour le cornet
+    // On tire les 5 meilleurs genres pour le cornet
     const sortedGenres = Object.values(genreStats)
         .sort((a, b) => b.totalRevenue - a.totalRevenue)
-        .slice(0, 4);
+        .slice(0, 5);
 
     vizData.topGenres = sortedGenres;
 }

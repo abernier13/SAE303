@@ -15,7 +15,7 @@
     <!-- Feuilles de style (Design global + Spécificités globe) -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/globe.css">
-    <link rel="shortcut icon" type="image/svg" href="/img/svg/objets/photo-camera-picture-svgrepo-com.svg" />
+    <link rel="shortcut icon" type="image/svg" href="/img/svg/objets/cinema-alt-svgrepo-com.svg" />
 </head>
 
 <body>
@@ -232,6 +232,10 @@
                 <text id="viz-label" x="400" y="550" text-anchor="middle" class="viz-text"
                     style="display: none;"></text>
                 <g id="chart-labels"></g>
+
+                <!-- Conteneurs pour l'étape 2 -->
+                <g id="lightsaber-viz" style="opacity: 0; pointer-events: none;"></g>
+                <g id="logo-viz" style="opacity: 0; pointer-events: none;"></g>
             </svg>
 
             <div class="sticky-graphic" id="popcorn-container">
@@ -1126,6 +1130,7 @@
                             stroke="url(#Dégradé_sans_nom_194-2)" stroke-linecap="round" stroke-miterlimit="10"
                             stroke-width="10" />
                     </g>
+                    <g id="popcorn-labels-layer"></g>
                 </svg>
             </div>
         </div>
@@ -1176,12 +1181,12 @@
 
     <footer>
         <div class="lien-json">
-            <a href="https://www.kaggle.com/datasets/aditya126/movies-box-office-dataset-2000-2024?resource=download" target="_blank">Source
+            <a href="https://www.kaggle.com/datasets/aditya126/movies-box-office-dataset-2000-2024?resource=download"
+                target="_blank">Source
                 JSON</a>
         </div>
     </footer>
 
-    <!-- Point d'entrée de notre script (chargé en module pour les import/export) -->
     <script type="module" src="./js/script.js"></script>
 </body>
 
