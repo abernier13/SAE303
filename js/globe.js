@@ -146,7 +146,7 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
                 }
                 // On fait suivre la souris à l'étiquette
                 if (labelContinent) {
-                    labelContinent.style.transform = `translate(${e.clientX + 5}px, ${e.clientY + 5}px)`;
+                    labelContinent.style.transform = `translate(${e.clientX + 15}px, ${e.clientY + 15}px)`;
                 }
             } else {
                 if (labelContinent) labelContinent.style.opacity = 0;

@@ -350,3 +350,22 @@ p {
     pointer-events: none;
     z-index: 5;
 }
+
+/* Footer */
+.lien-json {
+    margin: 10px 30px 10px 30px;
+    padding: 10px;
+    background-color: #ff0000;
+    width: fit-content;
+    border-radius: 10px;
+
+    a {
+        text-decoration: none;
+        color: white;
+    }
+}
+
+.lien-json:hover {
+    opacity: 70%;
+    border: 2px solid white;
+}
