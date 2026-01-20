@@ -1,9 +1,23 @@
 import { animate, createDrawable } from 'https://esm.sh/animejs@4.2.2';
 import { pathStarWars } from './constants.js';
 
+// Initialisation du son du sabre laser
+const ignitsound = new Audio('./img/animation_start/son/lightsaber-ignition-6816.mp3');
+
+// Fonction pour "amorcer" l'audio (appelée au clic sur le bouton Start)
+export function primeAudio() {
+    ignitsound.play().then(() => {
+        ignitsound.pause();
+        ignitsound.currentTime = 0;
+    }).catch(e => console.log("Audio priming pending..."));
+}
 
 // Initialise l'étape du sabre laser et du logo Star Wars
 export function initLightsaberStep(vizData) {
+    ignitsound.currentTime = 0;
+    ignitsound.play().catch(e => {
+        console.log("L'utilisateur doit interagir avec la page pour activer le son.");
+    });
     const saberContainer = document.getElementById('lightsaber-viz');
     const logoContainer = document.getElementById('logo-viz');
     if (!saberContainer || !logoContainer) return;

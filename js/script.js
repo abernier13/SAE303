@@ -5,9 +5,12 @@ import { pathStarWars, pathStar } from './constants.js';
 import { vizData, loadData } from './data.js';
 import { initGlobeController } from './globe.js';
 import { updatePopcornUI, animatePopcorn } from './popcorn.js';
-import { initLightsaberStep, clearLightsaberStep } from './lightsaber.js';
+// L'importation de primeAudio
+import { initLightsaberStep, clearLightsaberStep, primeAudio } from './lightsaber.js';
 
 // Récupération des éléments HTML (DOM) dont on va avoir besoin
+const experienceOverlay = document.getElementById('experience-overlay');
+const btnStart = document.getElementById('btn-start-experience');
 const vizPath = document.getElementById('morph-path');
 const vizLabel = document.getElementById('viz-label');
 const statDomestic = document.getElementById('stat-domestic');
@@ -35,6 +38,24 @@ async function init() {
       setupObserver(); // On lance l'écouteur de scroll
       initGlobeController(globeCanvas, globeContainer, labelContinent, vizData); // On allume le globe
       initTitleAnimation(); // L'animation du titre qui défile
+
+      // Gestion de l'overlay de démarrage
+      if (btnStart && experienceOverlay) {
+         btnStart.addEventListener('click', () => {
+            // On mémorise que l'expérience a commencé
+            sessionStorage.setItem('experienceStarted', 'true');
+
+            // On déverrouille l'audio
+            primeAudio();
+
+            // On lance l'animation de sortie
+            experienceOverlay.style.opacity = '0';
+            experienceOverlay.style.visibility = 'hidden';
+
+            // On autorise le scroll
+            document.body.classList.add('experience-started');
+         });
+      }
 
    } catch (error) {
       console.error("L'initialisation a planté :", error);

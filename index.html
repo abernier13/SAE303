@@ -17,8 +17,23 @@
     <link rel="stylesheet" href="./css/ratings.css">
     <link rel="shortcut icon" type="image/svg" href="/img/svg/objets/cinema-alt-svgrepo-com.svg" />
 </head>
+<script>
+    // Script immédiat pour éviter le flash de l'overlay au refresh
+    if (sessionStorage.getItem('experienceStarted') === 'true') {
+        document.documentElement.classList.add('hide-overlay-immediately');
+    }
+</script>
 
 <body>
+    <!-- Overlay d'introduction pour débloquer l'audio et l'immersion -->
+    <div id="experience-overlay">
+        <div class="overlay-content">
+            <h1>L'Analytique du Cinéma</h1>
+            <p>Une expérience immersive à travers le Box-Office mondial.</p>
+            <button id="btn-start-experience">PLONGER DANS L'EXPÉRIENCE</button>
+            <p class="overlay-note">(Activez le son pour une immersion totale)</p>
+        </div>
+    </div>
     <!-- Section d'accueil (Hero) -->
     <header class="hero">
         <div class="hero-content">
