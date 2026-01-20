@@ -110,7 +110,6 @@ function updateViz(stepIndex) {
          vizLabel.style.display = "block";
          targetPath = "";
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
-         labelText = `USA: ${vizData.avgDomestic}%  vs  Monde: ${vizData.avgForeign}%`;
          color = "#f5c518";
 
          // Affichage du sabre laser et du logo

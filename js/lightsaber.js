@@ -1,13 +1,11 @@
 import { animate, createDrawable } from 'https://esm.sh/animejs@4.2.2';
 import { pathStarWars } from './constants.js';
 
-/**
- * Initialise l'étape du sabre laser et du logo Star Wars
- */
+
+// Initialise l'étape du sabre laser et du logo Star Wars
 export function initLightsaberStep(vizData) {
     const saberContainer = document.getElementById('lightsaber-viz');
     const logoContainer = document.getElementById('logo-viz');
-
     if (!saberContainer || !logoContainer) return;
 
     // On vide les conteneurs pour repartir à 0
@@ -16,7 +14,7 @@ export function initLightsaberStep(vizData) {
     saberContainer.style.opacity = 1;
     logoContainer.style.opacity = 1;
 
-    // 1. Création du Logo Star Wars Animé (contours)
+    // Création du Logo Star Wars Animé (contours)
     const logoPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     logoPath.setAttribute('d', pathStarWars);
     logoPath.classList.add('saber-logo');
@@ -31,7 +29,7 @@ export function initLightsaberStep(vizData) {
         easing: 'easeInOutQuad'
     });
 
-    // 2. Création du Sabre Laser
+    // Création du Sabre Laser
     const domesticPct = parseFloat(vizData.avgDomestic) || 0;
     const foreignPct = parseFloat(vizData.avgForeign) || 0;
     const totalWidth = 600;
@@ -40,7 +38,7 @@ export function initLightsaberStep(vizData) {
 
     // Groupe principal du sabre (centré)
     const gSaber = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    gSaber.setAttribute('transform', 'translate(150, 350)');
+    gSaber.setAttribute('transform', 'translate(150, 420)');
     saberContainer.appendChild(gSaber);
 
     // Les segments de la lame
@@ -72,8 +70,8 @@ export function initLightsaberStep(vizData) {
     // Segment USA (Rouge)
     const rectUSA = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rectUSA.setAttribute('x', '0');
-    rectUSA.setAttribute('y', '-4');
-    rectUSA.setAttribute('height', '8');
+    rectUSA.setAttribute('y', '-5');
+    rectUSA.setAttribute('height', '10');
     rectUSA.classList.add('saber-blade-usa');
     rectUSA.setAttribute('rx', '4');
     rectUSA.setAttribute('width', '0');
@@ -82,8 +80,8 @@ export function initLightsaberStep(vizData) {
     // Segment Monde (Bleu)
     const rectWorld = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rectWorld.setAttribute('x', domesticWidth - 4);
-    rectWorld.setAttribute('y', '-4');
-    rectWorld.setAttribute('height', '8');
+    rectWorld.setAttribute('y', '-5');
+    rectWorld.setAttribute('height', '10');
     rectWorld.classList.add('saber-blade-world');
     rectWorld.setAttribute('rx', '4');
     rectWorld.setAttribute('width', '0');
@@ -101,11 +99,77 @@ export function initLightsaberStep(vizData) {
         delay: 200,
         easing: 'easeOutExpo'
     });
+
+    // 3. Ajout des Labels et Lignes de rappel
+    // Label USA
+    const textUSA = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textUSA.textContent = `USA: ${vizData.avgDomestic}%`;
+    textUSA.classList.add('saber-label-usa');
+    textUSA.setAttribute('x', domesticWidth / 2);
+    textUSA.setAttribute('y', '-70');
+    textUSA.setAttribute('text-anchor', 'middle');
+    textUSA.style.opacity = "0";
+    bladeGroup.appendChild(textUSA);
+
+    // Ligne USA
+    const lineUSA = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    lineUSA.classList.add('saber-line-usa');
+    lineUSA.setAttribute('x1', domesticWidth / 2);
+    lineUSA.setAttribute('y1', '-60');
+    lineUSA.setAttribute('x2', domesticWidth / 2);
+    lineUSA.setAttribute('y2', '-60'); // Départ au même point pour l'anim
+    bladeGroup.appendChild(lineUSA);
+
+    // Label Monde
+    const textWorld = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textWorld.textContent = `MONDE: ${vizData.avgForeign}%`;
+    textWorld.classList.add('saber-label-world');
+    textWorld.setAttribute('x', domesticWidth + foreignWidth / 2);
+    textWorld.setAttribute('y', '-70');
+    textWorld.setAttribute('text-anchor', 'middle');
+    textWorld.style.opacity = "0";
+    bladeGroup.appendChild(textWorld);
+
+    // Ligne Monde
+    const lineWorld = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    lineWorld.classList.add('saber-line-world');
+    lineWorld.setAttribute('x1', domesticWidth + foreignWidth / 2);
+    lineWorld.setAttribute('y1', '-60');
+    lineWorld.setAttribute('x2', domesticWidth + foreignWidth / 2);
+    lineWorld.setAttribute('y2', '-60');
+    bladeGroup.appendChild(lineWorld);
+
+    // Animations des labels et lignes
+    animate(lineUSA, {
+        y2: -15,
+        duration: 600,
+        delay: 800,
+        easing: 'easeOutQuad'
+    });
+    animate(textUSA, {
+        opacity: [0, 1],
+        translateY: [10, 0],
+        duration: 600,
+        delay: 1000,
+        easing: 'easeOutQuad'
+    });
+
+    animate(lineWorld, {
+        y2: -15,
+        duration: 600,
+        delay: 1000,
+        easing: 'easeOutQuad'
+    });
+    animate(textWorld, {
+        opacity: [0, 1],
+        translateY: [10, 0],
+        duration: 600,
+        delay: 1200,
+        easing: 'easeOutQuad'
+    });
 }
 
-/**
- * Cache les éléments du sabre laser
- */
+// Cache les éléments du sabre laser
 export function clearLightsaberStep() {
     const saberContainer = document.getElementById('lightsaber-viz');
     const logoContainer = document.getElementById('logo-viz');

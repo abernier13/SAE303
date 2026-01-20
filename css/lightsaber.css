@@ -18,3 +18,32 @@
     fill: none;
     stroke: var(--accent-gold);
 }
+
+/* Labels et Lignes de rappel */
+.saber-label-usa {
+    fill: #e50914;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.saber-label-world {
+    fill: #0070ff;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.saber-line-usa {
+    stroke: #e50914;
+    stroke-width: 2;
+    stroke-dasharray: 2 2;
+}
+
+.saber-line-world {
+    stroke: #0070ff;
+    stroke-width: 2;
+    stroke-dasharray: 2 2;
+}
