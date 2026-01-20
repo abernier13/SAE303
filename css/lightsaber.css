@@ -1,0 +1,20 @@
+/* --- GRAPHIQUE SABRE LASER --- */
+#lightsaber-viz,
+#logo-viz {
+    transition: opacity 0.5s ease;
+}
+
+.saber-blade-usa {
+    fill: #e50914;
+    filter: drop-shadow(0 0 12px #e50914);
+}
+
+.saber-blade-world {
+    fill: #0070ff;
+    filter: drop-shadow(0 0 12px #0070ff);
+}
+
+.saber-logo {
+    fill: none;
+    stroke: var(--accent-gold);
+}

@@ -10,7 +10,7 @@ export function initLightsaberStep(vizData) {
 
     if (!saberContainer || !logoContainer) return;
 
-    // On vide les conteneurs pour repartir à neuf
+    // On vide les conteneurs pour repartir à 0
     saberContainer.innerHTML = '';
     logoContainer.innerHTML = '';
     saberContainer.style.opacity = 1;
@@ -19,23 +19,22 @@ export function initLightsaberStep(vizData) {
     // 1. Création du Logo Star Wars Animé (contours)
     const logoPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     logoPath.setAttribute('d', pathStarWars);
-    logoPath.setAttribute('fill', 'none');
-    logoPath.setAttribute('stroke', '#f5c518');
-    logoPath.setAttribute('stroke-width', '1');
+    logoPath.classList.add('saber-logo');
+    logoPath.setAttribute('stroke-width', '0.5');
     logoPath.setAttribute('transform', 'translate(300, 50) scale(4)'); // Logo réduit en haut
     logoContainer.appendChild(logoPath);
 
     const drawableLogo = createDrawable(logoPath);
     animate(drawableLogo, {
         draw: '0 1',
-        duration: 2000,
+        duration: 15000,
         easing: 'easeInOutQuad'
     });
 
     // 2. Création du Sabre Laser
     const domesticPct = parseFloat(vizData.avgDomestic) || 0;
     const foreignPct = parseFloat(vizData.avgForeign) || 0;
-    const totalWidth = 500;
+    const totalWidth = 600;
     const domesticWidth = (domesticPct / 100) * totalWidth;
     const foreignWidth = (foreignPct / 100) * totalWidth;
 
@@ -44,16 +43,16 @@ export function initLightsaberStep(vizData) {
     gSaber.setAttribute('transform', 'translate(150, 350)');
     saberContainer.appendChild(gSaber);
 
-    // Les Segments de la lame
+    // Les segments de la lame
     const bladeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
     // On aligne la lame avec la sortie du manche
-    bladeGroup.setAttribute('transform', 'translate(15, 0)');
+    bladeGroup.setAttribute('transform', 'translate(1, 0)');
     gSaber.appendChild(bladeGroup);
 
     // Le Manche (Handle) COMPLET - Extrait de icons8-sabre-laser.svg
     const handleGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
     // On aligne précisément le point de sortie (émetteur) du manche avec le début de la lame (ajusté final)
-    handleGroup.setAttribute('transform', 'translate(15, 0) scale(4) rotate(45) translate(-15, -28.5)');
+    handleGroup.setAttribute('transform', 'translate(15, 0) scale(4) rotate(45) translate(-20, -28.5)');
     gSaber.appendChild(handleGroup);
 
     const handlePaths = [
@@ -75,8 +74,7 @@ export function initLightsaberStep(vizData) {
     rectUSA.setAttribute('x', '0');
     rectUSA.setAttribute('y', '-4');
     rectUSA.setAttribute('height', '8');
-    rectUSA.setAttribute('fill', '#e50914');
-    rectUSA.setAttribute('filter', 'drop-shadow(0 0 12px #e50914)');
+    rectUSA.classList.add('saber-blade-usa');
     rectUSA.setAttribute('rx', '4');
     rectUSA.setAttribute('width', '0');
     bladeGroup.appendChild(rectUSA);
@@ -86,8 +84,7 @@ export function initLightsaberStep(vizData) {
     rectWorld.setAttribute('x', domesticWidth - 4);
     rectWorld.setAttribute('y', '-4');
     rectWorld.setAttribute('height', '8');
-    rectWorld.setAttribute('fill', '#0070ff');
-    rectWorld.setAttribute('filter', 'drop-shadow(0 0 12px #0070ff)');
+    rectWorld.classList.add('saber-blade-world');
     rectWorld.setAttribute('rx', '4');
     rectWorld.setAttribute('width', '0');
     bladeGroup.appendChild(rectWorld);

@@ -1,0 +1,45 @@
+/* --- GRAPHIQUE POPCORN --- */
+#popcorn-container {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    position: absolute;
+    top: 0;
+    left: 15%;
+    width: 60rem;
+    height: 100%;
+    transform: scale(1.15) translateX(-10%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.popcorn-stripe {
+    transition: opacity 0.3s ease;
+    transform-origin: center bottom;
+    transform-box: fill-box;
+    opacity: 0;
+    transform: scaleY(0);
+}
+
+.popcorn-value-bg {
+    fill: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+}
+
+.popcorn-value {
+    fill: #fff;
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: bold;
+    opacity: 0;
+}
+
+.popcorn-text {
+    fill: rgba(255, 255, 255, 0.95);
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0;
+}

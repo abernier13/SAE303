@@ -297,12 +297,6 @@ p {
     max-width: 400px;
 }
 
-.viz-text {
-    fill: var(--text-color);
-    font-family: var(--font-heading);
-    font-size: 24px;
-}
-
 .stat-highlight {
     font-size: 2rem;
     font-weight: bold;
@@ -330,25 +324,6 @@ p {
     .step {
         min-height: 60vh;
     }
-}
-
-/* Graphique Popcorn */
-#popcorn-container {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    /* Zone d'overlay */
-    position: absolute;
-    top: 0;
-    left: 15%;
-    width: 60rem;
-    height: 100%;
-    /* Position et échelle */
-    transform: scale(1.15) translateX(-10%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    z-index: 5;
 }
 
 /* Footer */

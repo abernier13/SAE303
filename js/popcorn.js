@@ -33,11 +33,6 @@ export function updatePopcornUI(genres) {
                 const scaleFactor = (genre.totalRevenue / maxRevenue);
                 polygon.setAttribute('data-target-scale', scaleFactor.toFixed(3));
 
-                polygon.style.transformOrigin = "center bottom";
-                polygon.style.transformBox = "fill-box";
-                polygon.style.opacity = "0";
-                polygon.style.transform = "scaleY(0)";
-
                 // Calcul du sommet et du centre
                 const points = polygon.getAttribute('points').trim().split(/\s+/).map(Number);
                 let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
@@ -61,37 +56,26 @@ export function updatePopcornUI(genres) {
                 const bgH = 34;
                 const bgEl = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                 bgEl.classList.add('popcorn-value-bg');
-                bgEl.setAttribute("fill", "rgba(0, 0, 0, 0.5)");
                 bgEl.setAttribute("rx", "8");
                 bgEl.setAttribute("width", bgW);
                 bgEl.setAttribute("height", bgH);
                 bgEl.setAttribute("x", centerX - bgW / 2);
                 bgEl.setAttribute("y", finalTopY - 15 - bgH + 8);
-                bgEl.style.opacity = "0";
                 if (labelsLayer) labelsLayer.appendChild(bgEl);
 
                 const valueEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 valueEl.classList.add('popcorn-value');
-                valueEl.setAttribute("fill", "#fff");
                 valueEl.setAttribute("text-anchor", "middle");
-                valueEl.setAttribute("font-family", "'Outfit', sans-serif");
-                valueEl.setAttribute("font-size", "22");
-                valueEl.setAttribute("font-weight", "bold");
                 valueEl.textContent = revenueText;
 
                 valueEl.setAttribute("x", centerX);
                 valueEl.setAttribute("y", finalTopY - 15);
-                valueEl.style.opacity = "0";
                 if (labelsLayer) labelsLayer.appendChild(valueEl);
 
                 // 2. Étiquette GENRE + FILM (verticale dans la bande)
                 const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 textEl.classList.add('popcorn-text');
-                textEl.setAttribute("fill", "rgba(255, 255, 255, 0.95)");
                 textEl.setAttribute("text-anchor", "start");
-                textEl.setAttribute("font-family", "'Outfit', sans-serif");
-                textEl.setAttribute("font-size", "18");
-                textEl.setAttribute("font-weight", "600");
 
                 const textY = maxY - 30;
                 // On stocke la rotation pour l'animation
@@ -100,7 +84,6 @@ export function updatePopcornUI(genres) {
                 // Positionnement initial
                 textEl.style.transform = `translate(${centerX}px, ${textY}px) rotate(${config.rotation}deg)`;
                 textEl.style.transformOrigin = "left center";
-                textEl.style.opacity = "0";
 
                 textEl.textContent = `${genre.name.toUpperCase()} • ${genre.topMovie.title.toUpperCase()}`;
                 if (labelsLayer) labelsLayer.appendChild(textEl);

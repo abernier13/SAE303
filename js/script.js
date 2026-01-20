@@ -161,8 +161,8 @@ function updateViz(stepIndex) {
    } else {
       let finalOpacity = 1;
 
-      // Si le path est déjà invisible (opacity < 0.1), on change direct le path
-      // Sinon on fait un fondu sortant, on change, et on fait un fondu entrant
+      // Si le path est déjà invisible (opacity < 0.1) on change direct le path
+      // Sinon on fait un fondu sortant on change et on fait un fondu entrant
       const currentOpacity = parseFloat(window.getComputedStyle(vizPath).opacity);
 
       if (currentOpacity < 0.1) {
