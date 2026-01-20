@@ -1,11 +1,10 @@
 // Ce fichier importe les petits modules spécialisés (anime.js, globe 3D)
 
 import { animate, createTimeline, createDrawable } from 'https://esm.sh/animejs@4.2.2';
-import { pathStarWars, pathStar } from './constants.js';
+import { pathStarWars, pathStar, pathCamera } from './constants.js';
 import { vizData, loadData } from './data.js';
 import { initGlobeController } from './globe.js';
 import { updatePopcornUI, animatePopcorn } from './popcorn.js';
-// L'importation de primeAudio
 import { initLightsaberStep, clearLightsaberStep, primeAudio } from './lightsaber.js';
 
 // Récupération des éléments HTML (DOM) dont on va avoir besoin
@@ -37,7 +36,8 @@ async function init() {
       vizPath.setAttribute('d', ""); // On vide le path SVG au début (car c'est le globe qui est là)
       setupObserver(); // On lance l'écouteur de scroll
       initGlobeController(globeCanvas, globeContainer, labelContinent, vizData); // On allume le globe
-      initTitleAnimation(); // L'animation du titre qui défile
+      initHeroTitleAnimation(); // L'animation du titre Hero
+      initSplashTitleAnimation(); // L'animation du titre de l'overlay
 
       // Gestion de l'overlay de démarrage
       if (btnStart && experienceOverlay) {
@@ -62,10 +62,38 @@ async function init() {
    }
 }
 
-// Animation du texte H1 
+// Animation du titre de l'écran d'accueil
+function initSplashTitleAnimation() {
+   const splashTitle = document.getElementById('titleFirst');
+   if (splashTitle) {
+      const text = splashTitle.textContent;
+      splashTitle.innerHTML = '';
 
-function initTitleAnimation() {
-   const titleElement = document.querySelector('h1');
+      // On découpe le texte en lettres
+      for (let char of text) {
+         const span = document.createElement('span');
+         span.textContent = char === ' ' ? '\u00A0' : char;
+         span.style.display = 'inline-block';
+         span.style.opacity = '0';
+         splashTitle.appendChild(span);
+      }
+
+      // Animation d'apparition élégante
+      animate(splashTitle.querySelectorAll('span'), {
+         opacity: [0, 1],
+         translateY: [20, 0],
+         translateZ: 0,
+         duration: 1000,
+         easing: 'easeOutExpo',
+         delay: (el, i) => 700 + (30 * i) // Petit délai pour laisser l'image de fond apparaître
+      });
+   }
+}
+
+// Animation du titre H1 de l'accueil
+function initHeroTitleAnimation() {
+   // On cible spécifiquement le H1 de la section hero
+   const titleElement = document.querySelector('.hero h1');
    if (titleElement) {
       const textContainer = titleElement.querySelector('span') || titleElement;
       const text = textContainer.textContent;
@@ -152,6 +180,14 @@ function updateViz(stepIndex) {
          labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
          color = "#e50914";
          break;
+
+      case 5: // Étape Caméra (Fin)
+         clearLightsaberStep();
+         targetPath = pathCamera;
+         targetVB = { x: 0, y: 0, w: 800, h: 600 };
+         labelText = "Réalisation & Production";
+         color = "#333";
+         break;
    }
 
    // Visibilité du Globe : on l'allume seulement à l'étape 1
@@ -185,7 +221,28 @@ function updateViz(stepIndex) {
       // Sinon on fait un fondu sortant on change et on fait un fondu entrant
       const currentOpacity = parseFloat(window.getComputedStyle(vizPath).opacity);
 
-      if (currentOpacity < 0.1) {
+      if (stepIndex === 5 || (stepIndex === 4 && currentOpacity > 0.5)) {
+         animate(vizPath, {
+            d: targetPath,
+            fill: color,   
+            opacity: 1,
+            duration: 1000,
+            easing: 'easeInOutQuad',
+            // Effet néon si on arrive à la caméra (step 5)
+            update: (anim) => {
+               if (stepIndex === 5) {
+                  const progress = anim.progress / 100;
+                  // On crée un effet de lueur progressive 
+                  vizPath.style.filter = `drop-shadow(0 0 ${progress * 8}px white) drop-shadow(0 0 ${progress * 15}px #f5c518)`;
+               } else {
+                  vizPath.style.filter = 'none';
+               }
+            }
+         });
+      }
+      
+      else if (currentOpacity < 0.1) {
+         vizPath.style.filter = 'none'; 
          if (targetPath) {
             vizPath.setAttribute('d', targetPath);
             vizPath.setAttribute('fill', color);

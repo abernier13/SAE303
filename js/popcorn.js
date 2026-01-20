@@ -1,5 +1,4 @@
-// Ce fichier gère l'animation dynamique du cornet de popcorn (le Top 5 Genres).
-// On crée les textes à la volée et on fait grandir les bandes rouges.
+// Ce fichier gère l'animation dynamique du cornet de popcorn (le top 5 des genres de film les plus rentables)
 import { animate, stagger } from 'https://esm.sh/animejs@4.2.2';
 
 // Met à jour les éléments du SVG avec les données réelles
@@ -44,14 +43,14 @@ export function updatePopcornUI(genres) {
                 const centerX = (minX + maxX) / 2;
                 const finalTopY = maxY - (maxY - minY) * scaleFactor;
 
-                // 1. Étiquette REVENU (au sommet) - En BLANC avec FOND
+                // Étiquette REVENU au sommet
                 const revenueMillions = (genre.totalRevenue / 1000000).toLocaleString('en-US', {
                     minimumFractionDigits: 1,
                     maximumFractionDigits: 1
                 }) + "M";
                 const revenueText = `$${revenueMillions}`;
 
-                // Création du fond (rect) - Padding augmenté
+                // Création du fond (rect) 
                 const bgW = revenueText.length * 11 + 20;
                 const bgH = 34;
                 const bgEl = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -72,7 +71,7 @@ export function updatePopcornUI(genres) {
                 valueEl.setAttribute("y", finalTopY - 15);
                 if (labelsLayer) labelsLayer.appendChild(valueEl);
 
-                // 2. Étiquette GENRE + FILM (verticale dans la bande)
+                // Étiquette GENRE + FILM (verticale dans la bande)
                 const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 textEl.classList.add('popcorn-text');
                 textEl.setAttribute("text-anchor", "start");
