@@ -1,5 +1,5 @@
 // La logique du Globe 3D (librairie Cobe)
-// Ce fichier gère l'affichage de la terre, la rotation, et la détection d'où se trouve la souris.
+// Ce fichier gère l'affichage de la Terre, la rotation, et la détection d'où se trouve la souris.
 import createGlobe from 'https://esm.sh/cobe';
 import { CONTINENT_DOTS } from './constants.js';
 
@@ -35,20 +35,19 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         glowColor: [1, 1, 1], // Aura blanche
         markers: [],
         onRender: (state) => {
-            // Si on ne touche à rien, le globe tourne tout seul avec un peu d'inertie
+            // Si on ne touche à rien le globe tourne tout seul 
             if (pointerInteracting !== null) {
                 // On est en train de "grabber" le globe, la rotation est gérée par la souris
             } else {
                 if (isHoveringGlobe) {
-                    // Si on survole, on ralentit presque tout (effet pause)
+                    // Si on survole on met en pause l'animation
                     rotationVelocity *= 0.9;
                 } else {
-                    // Sinon, on maintient une vitesse de croisière douce
+                    // Sinon on maintient une vitesse douce
                     if (rotationVelocity > 0.005) {
                         rotationVelocity *= 0.95;
                     } else if (rotationVelocity < 0.005) {
                         rotationVelocity += 0.0005;
-                        if (rotationVelocity > 0.005) rotationVelocity = 0.005;
                     }
                 }
                 phi += rotationVelocity;
