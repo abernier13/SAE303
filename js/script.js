@@ -78,7 +78,6 @@ function initSplashTitleAnimation() {
          splashTitle.appendChild(span);
       }
 
-      // Animation d'apparition élégante
       animate(splashTitle.querySelectorAll('span'), {
          opacity: [0, 1],
          translateY: [20, 0],

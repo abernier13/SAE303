@@ -146,19 +146,20 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3rem;
     max-width: 1400px;
     width: 90%;
 }
 
 .hero-graphic {
-    flex: 0 0 45%;
+    flex: 0 0 55%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: start;
+    transform: translateX(-100px);
 }
 
 .hero-text {
     flex: 0 0 45%;
+    /* On réduit un peu l'espace du texte pour laisser la place au SVG */
 
     p {
         margin-left: 5rem;
@@ -168,7 +169,8 @@ p {
 
 .terminator-svg {
     width: 100%;
-    max-width: 600px;
+    max-width: 850px;
+    /* On augmente la taille maximale du SVG (de 600px à 850px) */
     height: auto;
     opacity: 1;
     animation: terminator-transform 10s infinite;
