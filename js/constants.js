@@ -1,7 +1,7 @@
 // Ce fichier regroupe toutes les données statiques qui prendraient trop de place ailleurs.
 // On y trouve les coordonnées pour le globe, les mappings de pays et les chemins SVG complexes.
 
-// Points GPS (Lat, Lon) pour dessiner l'effet "néon" sur les continents au survol
+// Points GPS (Lat, Lon) pour dessiner les points rouges sur les continents au survol
 export const CONTINENT_DOTS = {
     "Amerique": [
         [60, -100], [50, -100], [40, -100], [30, -100],
@@ -54,5 +54,4 @@ export const pathStarWars = "M 9.300781 14 C 8 14 7 15 7 16.402344 C 7 17 7.1992
 export const pathStar = "M 400 100 L 479 261 L 657 287 L 528 412 L 559 589 L 400 505 L 241 589 L 271 412 L 143 287 L 321 261 Z";
 
 // Icône Caméra de fin (Optimisée pour le morphing depuis l'étoile : 10 points)
-// Dessinée pour avoir le même nombre de sommets que l'étoile pour une transition fluide.
 export const pathCamera = "M 200 200 L 600 200 L 600 500 L 200 500 L 200 400 L 150 450 L 150 250 L 200 300 L 200 200 L 400 350 Z";

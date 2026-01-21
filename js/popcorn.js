@@ -13,11 +13,11 @@ export function updatePopcornUI(genres) {
     // Les IDs des bandes rouges dans le SVG (de gauche à droite)
     // Rotations calculées précisément pour être parallèles aux bords inclinés
     const configs = [
-        { id: 'Rectangle_1', rotation: -96.2 },
-        { id: 'Rectangle_3', rotation: -93.7 },
-        { id: 'Rectangle_5', rotation: -91.2 },
-        { id: 'Rectangle_7', rotation: -88.7 },
-        { id: 'Rectangle_9', rotation: -86.2 }
+        { id: 'Rectangle_1' },
+        { id: 'Rectangle_3' },
+        { id: 'Rectangle_5' },
+        { id: 'Rectangle_7' },
+        { id: 'Rectangle_9' }
     ];
 
     genres.forEach((genre, index) => {
@@ -32,16 +32,28 @@ export function updatePopcornUI(genres) {
                 const scaleFactor = (genre.totalRevenue / maxRevenue);
                 polygon.setAttribute('data-target-scale', scaleFactor.toFixed(3));
 
-                // Calcul du sommet et du centre
+                // Calcul des limites et du centre de la base
                 const points = polygon.getAttribute('points').trim().split(/\s+/).map(Number);
-                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxYVal = -Infinity;
+
                 for (let i = 0; i < points.length; i += 2) {
-                    const x = points[i]; const y = points[i + 1];
-                    if (x < minX) minX = x; if (x > maxX) maxX = x;
-                    if (y < minY) minY = y; if (y > maxY) maxY = y;
+                    const x = points[i];
+                    const y = points[i + 1];
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxYVal) maxYVal = y;
                 }
-                const centerX = (minX + maxX) / 2;
-                const finalTopY = maxY - (maxY - minY) * scaleFactor;
+
+                let sumX = 0, countX = 0;
+                for (let i = 0; i < points.length; i += 2) {
+                    if (Math.abs(points[i + 1] - maxYVal) < 1) { // Tolérance de 1px
+                        sumX += points[i];
+                        countX++;
+                    }
+                }
+                const centerX = countX > 0 ? sumX / countX : (minX + maxX) / 2;
+                const finalTopY = maxYVal - (maxYVal - minY) * scaleFactor;
 
                 // Étiquette REVENU au sommet
                 const revenueMillions = (genre.totalRevenue / 1000000).toLocaleString('en-US', {
@@ -74,17 +86,43 @@ export function updatePopcornUI(genres) {
                 // Étiquette GENRE + FILM (verticale dans la bande)
                 const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 textEl.classList.add('popcorn-text');
-                textEl.setAttribute("text-anchor", "start");
 
-                const textY = maxY - 30;
-                // On stocke la rotation pour l'animation
-                textEl.setAttribute('data-rotation', config.rotation);
+                // Calcul de l'angle d'inclinaison de la bande
+                // Les points sont : [x1, y1, x2, y2, x3, y3, x4, y4, x5, y5]
+                // Les côtés verticaux principaux sont P2->P3 et P1->P4 (approximativement)
+                // Rectangle_1 points: 427.28 713.39 (P1), 385.51 713.37 (P2), 313 105.94 (P3), 367.98 105.95 (P4)
+                // Calcul de l'angle d'inclinaison de la bande (en degrés)
+                // On utilise atan(dx/dy). Comme dy est négatif (vers le haut), 
+                // une bande qui s'évase vers la gauche aura dx < 0, donc dx/dy > 0, angle > 0.
+                const angle1 = Math.atan((points[4] - points[2]) / (points[5] - points[3])) * 180 / Math.PI;
+                const angle2 = Math.atan((points[6] - points[0]) / (points[7] - points[1])) * 180 / Math.PI;
+                const rotation = (angle1 + angle2) / 2;
 
-                // Positionnement initial
-                textEl.style.transform = `translate(${centerX}px, ${textY}px) rotate(${config.rotation}deg)`;
-                textEl.style.transformOrigin = "left center";
+                const textY = maxYVal - 30;
 
-                textEl.textContent = `${genre.name.toUpperCase()} • ${genre.topMovie.title.toUpperCase()}`;
+                // Positionnement
+                textEl.setAttribute("x", centerX);
+                textEl.setAttribute("y", textY);
+                // On applique l'inverse de l'angle pour redresser le texte par rapport à l'axe vertical penché
+                textEl.style.transform = `rotate(${-rotation}deg)`;
+                textEl.style.transformOrigin = `${centerX}px ${textY}px`;
+
+                const labelText = `${genre.name.toUpperCase()} • ${genre.topMovie.title.toUpperCase()}`;
+                textEl.textContent = labelText;
+
+                // Calcul dynamique de la taille de police pour que ça rentre dans la bande
+                const stripeHeight = (maxYVal - minY) * scaleFactor;
+                const availableHeight = stripeHeight - 60; // Marge de sécurité
+                const numChars = labelText.length;
+
+                let fontSize = 14;
+                if (numChars * fontSize > availableHeight) {
+                    fontSize = availableHeight / numChars;
+                }
+
+                fontSize = Math.max(9, fontSize);
+                textEl.style.fontSize = `${fontSize}px`;
+
                 if (labelsLayer) labelsLayer.appendChild(textEl);
             }
         }
@@ -111,10 +149,9 @@ export function animatePopcorn() {
         easing: 'easeOutExpo'
     });
 
-    // 3. Les textes Genre/Film (maintien de leur rotation spécifique)
+    // 3. Les textes Genre/Film (maintien de leur orientation verticale)
     animate('.popcorn-text', {
         translateY: [20, 0],
-        rotate: (el) => parseFloat(el.getAttribute('data-rotation')),
         opacity: [0, 1],
         delay: stagger(105, { start: 450 }),
         duration: 800,

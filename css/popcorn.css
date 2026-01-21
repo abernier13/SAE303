@@ -3,16 +3,26 @@
     opacity: 0;
     transition: opacity 0.5s ease;
     position: absolute;
-    top: 0;
-    left: 15%;
+    top: -5%;
+    left: 10%;
     width: 60rem;
-    height: 100%;
-    transform: scale(1.15) translateX(-10%);
+    height: 110%;
+    transform: scale(1.4) translateX(-5%);
     display: flex;
     justify-content: center;
     align-items: center;
     pointer-events: none;
     z-index: 5;
+}
+
+@media (max-width: 768px) {
+    #popcorn-container {
+        /* On hérite de la position sticky de .sticky-graphic (25vh) */
+        transform: scale(0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .popcorn-stripe {
@@ -39,7 +49,14 @@
 .popcorn-text {
     fill: rgba(255, 255, 255, 0.95);
     font-family: var(--font-body);
-    font-size: 18px;
+    /* font-size: 14px; */
+    /* Sera géré dynamiquement par le JS */
     font-weight: 600;
     opacity: 0;
+    writing-mode: vertical-rl;
+    /* Texte vertical */
+    text-orientation: upright;
+    /* Caractères droits (empilés) */
+    text-anchor: end;
+    /* Aligne le bas du texte vertical avec le point Y */
 }

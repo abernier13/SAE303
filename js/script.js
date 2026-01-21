@@ -223,7 +223,7 @@ function updateViz(stepIndex) {
       if (stepIndex === 5 || (stepIndex === 4 && currentOpacity > 0.5)) {
          animate(vizPath, {
             d: targetPath,
-            fill: color,   
+            fill: color,
             opacity: 1,
             duration: 1000,
             easing: 'easeInOutQuad',
@@ -239,9 +239,9 @@ function updateViz(stepIndex) {
             }
          });
       }
-      
+
       else if (currentOpacity < 0.1) {
-         vizPath.style.filter = 'none'; 
+         vizPath.style.filter = 'none';
          if (targetPath) {
             vizPath.setAttribute('d', targetPath);
             vizPath.setAttribute('fill', color);
@@ -265,6 +265,32 @@ function updateViz(stepIndex) {
 
    // Logique de Zoom (ViewBox)
    if (stepIndex !== 3) {
+      // Ajustement pour mobile : on "zoom" en rognant les marges latérales inutiles
+      // et on centre spécifiquement chaque graphique
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+         // Largeur visible de 600unités -> Zoom ~1.33x
+         // On ajuste X et Y pour centrer l'élément principal
+         let mobileX = 100;
+         let mobileY = 0;
+
+         if (stepIndex === 2) {
+            // Sabre Laser : centre approx à x=450 -> offset x=150, y=120
+            mobileX = 150;
+            mobileY = 120;
+         } else if (stepIndex === 4) {
+            // Étoile
+            mobileX = 100;
+            mobileY = 50;
+         } else if (stepIndex === 5) {
+            // Caméra : centre approx à x=375 -> offset x=75, y=50
+            mobileX = 75;
+            mobileY = 50;
+         }
+
+         targetVB = { x: mobileX, y: mobileY, w: 600, h: 600 };
+      }
+
       animate(window.currentViewBox, {
          x: targetVB.x, y: targetVB.y, w: targetVB.w, h: targetVB.h,
          duration: 1000, easing: 'linear',

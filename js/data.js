@@ -85,14 +85,11 @@ function processAllData(data) {
                 genreStats[genre] = {
                     name: genre,
                     totalRevenue: 0,
-                    topMovie: { title: "", revenue: 0 }
+                    allMovies: [] // On stocke tous les films pour pouvoir diversifier
                 };
             }
             genreStats[genre].totalRevenue += world;
-            // On garde le film qui a rapporté le plus dans ce genre
-            if (world > genreStats[genre].topMovie.revenue) {
-                genreStats[genre].topMovie = { title: title, revenue: world };
-            }
+            genreStats[genre].allMovies.push({ title: title, revenue: world });
         });
     });
 
@@ -110,6 +107,27 @@ function processAllData(data) {
     const sortedGenres = Object.values(genreStats)
         .sort((a, b) => b.totalRevenue - a.totalRevenue)
         .slice(0, 5);
+
+    // Algorithme de diversification : un film unique par genre affiché
+    const usedTitles = new Set();
+
+    sortedGenres.forEach(genre => {
+        // On trie les films de ce genre par revenu décroissant
+        genre.allMovies.sort((a, b) => b.revenue - a.revenue);
+
+        // On cherche le meilleur film qui n'a pas encore été utilisé
+        let selectedMovie = genre.allMovies.find(m => !usedTitles.has(m.title));
+
+        // Si par hasard tous les films du genre ont été utilisés (peu probable), 
+        // on prend quand même le premier
+        if (!selectedMovie) selectedMovie = genre.allMovies[0];
+
+        genre.topMovie = selectedMovie;
+        usedTitles.add(selectedMovie.title);
+
+        // On nettoie l'objet pour ne pas trimballer des milliers de films inutilement
+        delete genre.allMovies;
+    });
 
     vizData.topGenres = sortedGenres;
 }
