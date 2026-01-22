@@ -5,6 +5,7 @@ import { pathStarWars, pathStar, pathCamera } from './constants.js';
 import { vizData, loadData } from './data.js';
 import { initGlobeController } from './globe.js';
 import { updatePopcornUI, animatePopcorn } from './popcorn.js';
+import { updateRatingsUI, animateRatings } from './ratings.js';
 import { initLightsaberStep, clearLightsaberStep, primeAudio } from './lightsaber.js';
 
 // Récupération des éléments HTML (DOM) dont on va avoir besoin
@@ -178,8 +179,10 @@ function updateViz(stepIndex) {
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
          labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
          color = "#e50914";
-         
-         
+
+         // Affichage de la note et des films
+         updateRatingsUI(vizData.avgRating, vizData.topRatedFilms);
+         break;
       case 5: // Étape Caméra (Fin)
          clearLightsaberStep();
          targetPath = pathCamera;
@@ -214,6 +217,7 @@ function updateViz(stepIndex) {
       if (stepIndex === 4) {
          ratingsLayer.style.opacity = 1;
          ratingsLayer.style.pointerEvents = "auto";
+         animateRatings(vizData.avgRating);
       } else {
          ratingsLayer.style.opacity = 0;
          ratingsLayer.style.pointerEvents = "none";
@@ -222,7 +226,7 @@ function updateViz(stepIndex) {
 
    // Logique de Morphing du chemin SVG
    // On cache le morph-path si on est sur les étapes avec des graphiques complexes
-   const hideMorphPath = (stepIndex === 1 || stepIndex === 2 || stepIndex === 3);
+   const hideMorphPath = (stepIndex === 1 || stepIndex === 2 || stepIndex === 3 || stepIndex === 4);
    if (hideMorphPath) {
       animate(vizPath, { opacity: 0, duration: 500, easing: 'linear' });
    } else {

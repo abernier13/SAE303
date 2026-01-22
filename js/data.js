@@ -69,7 +69,7 @@ function processAllData(data) {
                 rating = score;
                 totalRating += score;
                 ratedMoviesCount++;
-                
+
                 // On stocke les films avec notes pour trouver les perles rares
                 filmsAvecNotes.push({
                     title: title,
@@ -114,14 +114,16 @@ function processAllData(data) {
     vizData.continents.Europe = (continentTotals.Europe / 1000000000).toFixed(1);
     vizData.continents.Asie = (continentTotals.Asie / 1000000000).toFixed(1);
 
-    // Chercher les films exceptionnels : excellente critique (7.5+) et budget modéré ou faible
-    const avgBudget = totalWorldwide / movies.length;
-    const hiddenGems = filmsAvecNotes
-        .filter(f => f.rating >= 7.5 && f.budget <= avgBudget * 0.7) // Bonne note et budget < 70% de la moyenne
-        .sort((a, b) => b.rating - a.rating) // Trier par note décroissante
-        .slice(0, 4); // Prendre les 4 meilleurs
+    // Chercher les 4 films avec les meilleures notes
+    const topRatedFilms = [...filmsAvecNotes]
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 4);
 
-    vizData.hiddenGems = hiddenGems;
+    // Budget max parmi ces 4 pour servir de référence 100%
+    const maxBudgetTopRated = Math.max(...topRatedFilms.map(f => f.budget));
+
+    vizData.topRatedFilms = topRatedFilms;
+    vizData.maxBudgetTopRated = maxBudgetTopRated;
 
     // On tire les 5 meilleurs genres pour le cornet
     const sortedGenres = Object.values(genreStats)

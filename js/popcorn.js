@@ -37,7 +37,7 @@ export function updatePopcornUI(genres) {
                 polygon.classList.add('popcorn-stripe');
                 const scaleFactor = (genre.totalRevenue / maxRevenue);
 
-                // --- CALCULS DE POSITION ---
+                // Calculs de positions
                 const points = polygon.getAttribute('points').trim().split(/\s+/).map(Number);
                 let minX = Infinity, maxX = -Infinity, minY = Infinity, maxYVal = -Infinity;
 
@@ -56,7 +56,7 @@ export function updatePopcornUI(genres) {
                 const centerX = countX > 0 ? sumX / countX : (minX + maxX) / 2;
                 const finalTopY = maxYVal - (maxYVal - minY) * scaleFactor;
 
-                // --- CRÉATION DU MASQUE DE DÉCOUPE (Pour éviter l'effet de perspective) ---
+                // Masque de découpe pour l'animation de taille des bandes en jouant sur le clip-path
                 const clipId = `clip-popcorn-${index}`;
                 const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
                 clipPath.setAttribute("id", clipId);
@@ -74,7 +74,7 @@ export function updatePopcornUI(genres) {
                 defs.appendChild(clipPath);
                 polygon.setAttribute("clip-path", `url(#${clipId})`);
 
-                // --- 1. ÉTIQUETTE REVENU (AU SOMMET) ---
+                // étiquette du revenu (au sommet)
                 const revenueMillions = (genre.totalRevenue / 1000000).toLocaleString('en-US', {
                     minimumFractionDigits: 1, maximumFractionDigits: 1
                 }) + "M";
@@ -99,7 +99,7 @@ export function updatePopcornUI(genres) {
                 valueEl.textContent = revenueText;
                 if (labelsLayer) labelsLayer.appendChild(valueEl);
 
-                // --- 2. LE GENRE (DANS LA BANDE) ---
+                // Le genre (dans la bande)
                 const genreText = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 genreText.classList.add('popcorn-text');
                 
@@ -120,7 +120,7 @@ export function updatePopcornUI(genres) {
 
                 if (labelsLayer) labelsLayer.appendChild(genreText);
 
-                // --- 3. LE FILM (À DROITE DU GRAPHIQUE) ---
+                // Le film (à droite du graphique)
                 const movieGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 movieGroup.classList.add('popcorn-movie-right');
 
@@ -154,7 +154,7 @@ export function updatePopcornUI(genres) {
 }
 
 export function animatePopcorn() {
-    // 1. Les bandes grimpent (via le masque de découpe)
+    // Les bandes grimpent (via le masque de découpe)
     animate('.popcorn-clip-rect', {
         y: [el => el.getAttribute('data-y-start'), el => el.getAttribute('data-y-end')],
         height: [0, el => el.getAttribute('data-h-end')],
@@ -169,7 +169,7 @@ export function animatePopcorn() {
         duration: 400
     });
 
-    // 2. Les valeurs de revenus
+    // Les valeurs de revenus
     animate('.popcorn-value, .popcorn-value-bg', {
         translateY: [20, 0],
         opacity: [0, 1],
@@ -178,7 +178,7 @@ export function animatePopcorn() {
         easing: 'easeOutExpo'
     });
 
-    // 3. Les Genres (dans les bandes)
+    // Les Genres (dans les bandes)
     animate('.popcorn-text', {
         opacity: [0, 1],
         delay: stagger(100, { start: 500 }),
@@ -186,7 +186,7 @@ export function animatePopcorn() {
         easing: 'easeOutExpo'
     });
 
-    // 4. Les Films (à droite)
+    // Les Films (à droite)
     animate('.popcorn-movie-right', {
         translateX: [20, 0],
         opacity: [0, 1],
