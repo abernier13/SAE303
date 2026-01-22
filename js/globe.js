@@ -27,7 +27,7 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         height: 500 * 2,
         phi: 0,
         theta: 0,
-        dark: 1, // On est sur un thème sombre
+        dark: 1, // thème sombre
         diffuse: 1.2,
         mapSamples: 8000,
         mapBrightness: 6,

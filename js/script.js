@@ -120,7 +120,7 @@ function initHeroTitleAnimation() {
    }
 }
 
-// Cette fonction magique gère les transitions quand on change de section au scroll
+// Cette fonction gère les transitions quand on change de section au scroll
 function updateViz(stepIndex) {
    // Si on est déjà sur l'étape, on ne fait rien
    if (stepIndex === currentStep) return;

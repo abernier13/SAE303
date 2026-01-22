@@ -32,37 +32,31 @@ export function updatePopcornUI(genres) {
                 const scaleFactor = (genre.totalRevenue / maxRevenue);
                 polygon.setAttribute('data-target-scale', scaleFactor.toFixed(3));
 
-                // Calcul des limites et du centre de la base
+                // --- CALCULS DE POSITION ---
                 const points = polygon.getAttribute('points').trim().split(/\s+/).map(Number);
                 let minX = Infinity, maxX = -Infinity, minY = Infinity, maxYVal = -Infinity;
 
                 for (let i = 0; i < points.length; i += 2) {
-                    const x = points[i];
-                    const y = points[i + 1];
-                    if (x < minX) minX = x;
-                    if (x > maxX) maxX = x;
-                    if (y < minY) minY = y;
-                    if (y > maxYVal) maxYVal = y;
+                    const x = points[i]; const y = points[i + 1];
+                    if (x < minX) minX = x; if (x > maxX) maxX = x;
+                    if (y < minY) minY = y; if (y > maxYVal) maxYVal = y;
                 }
 
                 let sumX = 0, countX = 0;
                 for (let i = 0; i < points.length; i += 2) {
-                    if (Math.abs(points[i + 1] - maxYVal) < 1) { // Tolérance de 1px
-                        sumX += points[i];
-                        countX++;
+                    if (Math.abs(points[i + 1] - maxYVal) < 1) {
+                        sumX += points[i]; countX++;
                     }
                 }
                 const centerX = countX > 0 ? sumX / countX : (minX + maxX) / 2;
                 const finalTopY = maxYVal - (maxYVal - minY) * scaleFactor;
 
-                // Étiquette REVENU au sommet
+                // --- 1. ÉTIQUETTE REVENU (AU SOMMET) ---
                 const revenueMillions = (genre.totalRevenue / 1000000).toLocaleString('en-US', {
-                    minimumFractionDigits: 1,
-                    maximumFractionDigits: 1
+                    minimumFractionDigits: 1, maximumFractionDigits: 1
                 }) + "M";
                 const revenueText = `$${revenueMillions}`;
 
-                // Création du fond (rect) 
                 const bgW = revenueText.length * 11 + 20;
                 const bgH = 34;
                 const bgEl = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -71,65 +65,71 @@ export function updatePopcornUI(genres) {
                 bgEl.setAttribute("width", bgW);
                 bgEl.setAttribute("height", bgH);
                 bgEl.setAttribute("x", centerX - bgW / 2);
-                bgEl.setAttribute("y", finalTopY - 15 - bgH + 8);
+                bgEl.setAttribute("y", finalTopY - 25); 
                 if (labelsLayer) labelsLayer.appendChild(bgEl);
 
                 const valueEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 valueEl.classList.add('popcorn-value');
                 valueEl.setAttribute("text-anchor", "middle");
-                valueEl.textContent = revenueText;
-
                 valueEl.setAttribute("x", centerX);
-                valueEl.setAttribute("y", finalTopY - 15);
+                valueEl.setAttribute("y", finalTopY - 7);
+                valueEl.textContent = revenueText;
                 if (labelsLayer) labelsLayer.appendChild(valueEl);
 
-                // Étiquette GENRE + FILM (verticale dans la bande)
-                const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                textEl.classList.add('popcorn-text');
-
-                // Calcul de l'angle d'inclinaison de la bande
-                // Les points sont : [x1, y1, x2, y2, x3, y3, x4, y4, x5, y5]
-                // Les côtés verticaux principaux sont P2->P3 et P1->P4 (approximativement)
-                // Rectangle_1 points: 427.28 713.39 (P1), 385.51 713.37 (P2), 313 105.94 (P3), 367.98 105.95 (P4)
-                // Calcul de l'angle d'inclinaison de la bande (en degrés)
-                // On utilise atan(dx/dy). Comme dy est négatif (vers le haut), 
-                // une bande qui s'évase vers la gauche aura dx < 0, donc dx/dy > 0, angle > 0.
+                // --- 2. LE GENRE (DANS LA BANDE) ---
+                const genreText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                genreText.classList.add('popcorn-text');
+                
                 const angle1 = Math.atan((points[4] - points[2]) / (points[5] - points[3])) * 180 / Math.PI;
                 const angle2 = Math.atan((points[6] - points[0]) / (points[7] - points[1])) * 180 / Math.PI;
                 const rotation = (angle1 + angle2) / 2;
 
-                const textY = maxYVal - 30;
+                const genreY = maxYVal - 30;
+                genreText.setAttribute("x", centerX);
+                genreText.setAttribute("y", genreY);
+                genreText.style.transform = `rotate(${-rotation}deg)`;
+                genreText.style.transformOrigin = `${centerX}px ${genreY}px`;
+                genreText.textContent = genre.name.toUpperCase();
+                
+                // Taille de police adaptative pour le genre
+                genreText.style.fontSize = "14px";
+                genreText.style.fontWeight = "bold";
 
-                // Positionnement
-                textEl.setAttribute("x", centerX);
-                textEl.setAttribute("y", textY);
-                // On applique l'inverse de l'angle pour redresser le texte par rapport à l'axe vertical penché
-                textEl.style.transform = `rotate(${-rotation}deg)`;
-                textEl.style.transformOrigin = `${centerX}px ${textY}px`;
+                if (labelsLayer) labelsLayer.appendChild(genreText);
 
-                const labelText = `${genre.name.toUpperCase()} • ${genre.topMovie.title.toUpperCase()}`;
-                textEl.textContent = labelText;
+                // --- 3. LE FILM (À DROITE DU GRAPHIQUE) ---
+                const movieGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                movieGroup.classList.add('popcorn-movie-right');
 
-                // Calcul dynamique de la taille de police pour que ça rentre dans la bande
-                const stripeHeight = (maxYVal - minY) * scaleFactor;
-                const availableHeight = stripeHeight - 60; // Marge de sécurité
-                const numChars = labelText.length;
+                const listX = 980; // Position X fixe à droite du cornet
 
-                let fontSize = 14;
-                if (numChars * fontSize > availableHeight) {
-                    fontSize = availableHeight / numChars;
-                }
+                // Ligne de liaison pointillée
+                const connector = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                connector.setAttribute("x1", centerX + 10);
+                connector.setAttribute("y1", finalTopY);
+                connector.setAttribute("x2", listX - 10);
+                connector.setAttribute("y2", finalTopY);
+                connector.setAttribute("stroke", "white");
+                connector.setAttribute("stroke-width", "0.5");
+                connector.setAttribute("stroke-dasharray", "4");
+                connector.setAttribute("opacity", "0.3");
+                movieGroup.appendChild(connector);
 
-                fontSize = Math.max(9, fontSize);
-                textEl.style.fontSize = `${fontSize}px`;
-
-                if (labelsLayer) labelsLayer.appendChild(textEl);
+                const movieTitle = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                movieTitle.setAttribute("x", listX);
+                movieTitle.setAttribute("y", finalTopY + 5);
+                movieTitle.textContent = genre.topMovie.title.toUpperCase();
+                movieTitle.style.fontSize = "13px";
+                movieTitle.style.fill = "white";
+                movieTitle.style.fontFamily = "'Outfit', sans-serif";
+                
+                movieGroup.appendChild(movieTitle);
+                if (labelsLayer) labelsLayer.appendChild(movieGroup);
             }
         }
     });
 }
 
-// Lance les animations Anime.js
 export function animatePopcorn() {
     // 1. Les bandes grimpent
     animate('.popcorn-stripe', {
@@ -140,7 +140,7 @@ export function animatePopcorn() {
         delay: stagger(100)
     });
 
-    // 2. Les valeurs de revenus et leurs fonds
+    // 2. Les valeurs de revenus
     animate('.popcorn-value, .popcorn-value-bg', {
         translateY: [20, 0],
         opacity: [0, 1],
@@ -149,12 +149,20 @@ export function animatePopcorn() {
         easing: 'easeOutExpo'
     });
 
-    // 3. Les textes Genre/Film (maintien de leur orientation verticale)
+    // 3. Les Genres (dans les bandes)
     animate('.popcorn-text', {
-        translateY: [20, 0],
         opacity: [0, 1],
-        delay: stagger(105, { start: 450 }),
+        delay: stagger(100, { start: 500 }),
         duration: 800,
+        easing: 'easeOutExpo'
+    });
+
+    // 4. Les Films (à droite)
+    animate('.popcorn-movie-right', {
+        translateX: [20, 0],
+        opacity: [0, 1],
+        delay: stagger(100, { start: 600 }),
+        duration: 1000,
         easing: 'easeOutExpo'
     });
 }
