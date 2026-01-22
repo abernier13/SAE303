@@ -40,6 +40,7 @@ function processAllData(data) {
     let continentTotals = { "Amerique": 0, "Europe": 0, "Asie": 0 };
 
     const genreStats = {};
+    const filmsAvecNotes = []; // Pour trouver les perles rares (bonne note, budget faible)
 
     movies.forEach(movie => {
         // On extrait les valeurs importantes 
@@ -61,11 +62,21 @@ function processAllData(data) {
         }
 
         // Extraction de la note IMDB (format "X/10")
+        let rating = 0;
         if (ratingStr) {
             const score = parseFloat(ratingStr.split('/')[0]);
             if (!isNaN(score)) {
+                rating = score;
                 totalRating += score;
                 ratedMoviesCount++;
+                
+                // On stocke les films avec notes pour trouver les perles rares
+                filmsAvecNotes.push({
+                    title: title,
+                    budget: world,
+                    rating: rating,
+                    genres: genresStr
+                });
             }
         }
 
@@ -102,6 +113,15 @@ function processAllData(data) {
     vizData.continents.Amerique = (continentTotals.Amerique / 1000000000).toFixed(1);
     vizData.continents.Europe = (continentTotals.Europe / 1000000000).toFixed(1);
     vizData.continents.Asie = (continentTotals.Asie / 1000000000).toFixed(1);
+
+    // Chercher les films exceptionnels : excellente critique (7.5+) et budget modéré ou faible
+    const avgBudget = totalWorldwide / movies.length;
+    const hiddenGems = filmsAvecNotes
+        .filter(f => f.rating >= 7.5 && f.budget <= avgBudget * 0.7) // Bonne note et budget < 70% de la moyenne
+        .sort((a, b) => b.rating - a.rating) // Trier par note décroissante
+        .slice(0, 4); // Prendre les 4 meilleurs
+
+    vizData.hiddenGems = hiddenGems;
 
     // On tire les 5 meilleurs genres pour le cornet
     const sortedGenres = Object.values(genreStats)

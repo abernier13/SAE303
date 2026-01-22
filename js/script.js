@@ -178,8 +178,8 @@ function updateViz(stepIndex) {
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
          labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
          color = "#e50914";
-         break;
-
+         
+         
       case 5: // Étape Caméra (Fin)
          clearLightsaberStep();
          targetPath = pathCamera;
@@ -208,8 +208,20 @@ function updateViz(stepIndex) {
       }
    }
 
+   // Visibilité du Ratings Layer (Étoile) : seulement à l'étape 4
+   const ratingsLayer = document.getElementById('ratings-layer');
+   if (ratingsLayer) {
+      if (stepIndex === 4) {
+         ratingsLayer.style.opacity = 1;
+         ratingsLayer.style.pointerEvents = "auto";
+      } else {
+         ratingsLayer.style.opacity = 0;
+         ratingsLayer.style.pointerEvents = "none";
+      }
+   }
+
    // Logique de Morphing du chemin SVG
-   // On cache le morph-path si on est à l'étape du sabre laser ou du globe
+   // On cache le morph-path si on est sur les étapes avec des graphiques complexes
    const hideMorphPath = (stepIndex === 1 || stepIndex === 2 || stepIndex === 3);
    if (hideMorphPath) {
       animate(vizPath, { opacity: 0, duration: 500, easing: 'linear' });

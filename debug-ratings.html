@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Ratings</title>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        svg {
+            background: #222;
+            border: 1px solid #444;
+            max-width: 100%;
+            height: auto;
+        }
+        pre {
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Graphique Étoile avec Gradient OR</h1>
+    
+    <h2>SVG Rendu</h2>
+    <div id="svg-container"></div>
+    
+    <h2>Données</h2>
+    <pre id="data-output"></pre>
+    
+    <script type="module">
+        import { vizData, loadData } from './js/data.js';
+        import { updateRatingsUI, animateRatings } from './js/ratings.js';
+        
+        async function test() {
+            await loadData();
+            
+            // Afficher les données
+            const dataOutput = document.getElementById('data-output');
+            dataOutput.textContent = JSON.stringify({
+                avgRating: vizData.avgRating,
+                hiddenGems: vizData.hiddenGems
+            }, null, 2);
+            
+            // Créer un SVG de test
+            const container = document.getElementById('svg-container');
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", "0 0 800 600");
+            svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+            svg.style.width = "600px";
+            svg.style.height = "450px";
+            
+            // Ajouter un groupe pour les ratings
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute("id", "ratings-layer");
+            svg.appendChild(g);
+            
+            // Ajouter le SVG au DOM
+            container.appendChild(svg);
+            
+            // Appeler les fonctions de ratings
+            updateRatingsUI(vizData.avgRating, vizData.hiddenGems);
+            animateRatings(vizData.avgRating);
+            
+            console.log('✓ Test Ratings OK');
+            console.log('Données:', vizData);
+        }
+        
+        test().catch(err => {
+            console.error('✗ Erreur:', err);
+            document.getElementById('data-output').textContent = '✗ Erreur: ' + err.message;
+        });
+    </script>
+</body>
+</html>
