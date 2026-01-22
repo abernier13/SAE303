@@ -1,13 +1,17 @@
 // Ce fichier importe les petits modules spécialisés (anime.js, globe 3D)
 
 import { animate, createTimeline, createDrawable } from 'https://esm.sh/animejs@4.2.2';
-import { pathStarWars, pathStar } from './constants.js';
+import { pathStarWars, pathStar, pathWolverineClaws, pathWolverineMask } from './constants.js';
 import { vizData, loadData } from './data.js';
 import { initGlobeController } from './globe.js';
 import { updatePopcornUI, animatePopcorn } from './popcorn.js';
-import { initLightsaberStep, clearLightsaberStep } from './lightsaber.js';
+import { updateRatingsUI, animateRatings } from './ratings.js';
+import { initLightsaberStep, clearLightsaberStep, primeAudio } from './lightsaber.js';
+import { initWolverineUI, primeWolverineAudio } from './wolverine.js';
 
 // Récupération des éléments HTML (DOM) dont on va avoir besoin
+const experienceOverlay = document.getElementById('experience-overlay');
+const btnStart = document.getElementById('btn-start-experience');
 const vizPath = document.getElementById('morph-path');
 const vizLabel = document.getElementById('viz-label');
 const statDomestic = document.getElementById('stat-domestic');
@@ -34,17 +38,65 @@ async function init() {
       vizPath.setAttribute('d', ""); // On vide le path SVG au début (car c'est le globe qui est là)
       setupObserver(); // On lance l'écouteur de scroll
       initGlobeController(globeCanvas, globeContainer, labelContinent, vizData); // On allume le globe
-      initTitleAnimation(); // L'animation du titre qui défile
+      initWolverineUI(); // On prépare le calque Wolverine
+      initIntroTitleAnimation(); // L'animation du titre Intro
+      initSplashTitleAnimation(); // L'animation du titre de l'overlay
+
+      // Gestion de l'overlay de démarrage
+      if (btnStart && experienceOverlay) {
+         btnStart.addEventListener('click', () => {
+            // On mémorise que l'expérience a commencé
+            sessionStorage.setItem('experienceStarted', 'true');
+
+            // On déverrouille l'audio
+            primeAudio();
+            primeWolverineAudio();
+
+            // On lance l'animation de sortie
+            experienceOverlay.style.opacity = '0';
+            experienceOverlay.style.visibility = 'hidden';
+
+            // On autorise le scroll
+            document.body.classList.add('experience-started');
+         });
+      }
 
    } catch (error) {
       console.error("L'initialisation a planté :", error);
    }
 }
 
-// Animation du texte H1 
+// Animation du titre de l'écran d'accueil
+function initSplashTitleAnimation() {
+   const splashTitle = document.getElementById('titleFirst');
+   if (splashTitle) {
+      const text = splashTitle.textContent;
+      splashTitle.innerHTML = '';
 
-function initTitleAnimation() {
-   const titleElement = document.querySelector('h1');
+      // On découpe le texte en lettres
+      for (let char of text) {
+         const span = document.createElement('span');
+         span.textContent = char === ' ' ? '\u00A0' : char;
+         span.style.display = 'inline-block';
+         span.style.opacity = '0';
+         splashTitle.appendChild(span);
+      }
+
+      animate(splashTitle.querySelectorAll('span'), {
+         opacity: [0, 1],
+         translateY: [20, 0],
+         translateZ: 0,
+         duration: 1000,
+         easing: 'easeOutExpo',
+         delay: (el, i) => 700 + (30 * i) // Petit délai pour laisser l'image de fond apparaître
+      });
+   }
+}
+
+// Animation du titre H1 de l'accueil
+function initIntroTitleAnimation() {
+   // On cible spécifiquement le H1 de la section intro
+   const titleElement = document.querySelector('.intro-header h1');
    if (titleElement) {
       const textContainer = titleElement.querySelector('span') || titleElement;
       const text = textContainer.textContent;
@@ -72,7 +124,7 @@ function initTitleAnimation() {
    }
 }
 
-// Cette fonction magique gère les transitions quand on change de section au scroll
+// Cette fonction gère les transitions quand on change de section au scroll
 function updateViz(stepIndex) {
    // Si on est déjà sur l'étape, on ne fait rien
    if (stepIndex === currentStep) return;
@@ -110,7 +162,6 @@ function updateViz(stepIndex) {
          vizLabel.style.display = "block";
          targetPath = "";
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
-         labelText = `USA: ${vizData.avgDomestic}%  vs  Monde: ${vizData.avgForeign}%`;
          color = "#f5c518";
 
          // Affichage du sabre laser et du logo
@@ -131,6 +182,21 @@ function updateViz(stepIndex) {
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
          labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
          color = "#e50914";
+
+         // Synchronisation : on donne à vizPath la forme de l'étoile en coulisses
+         // pour que le prochain morphing (vers Wolverine) parte du bon endroit.
+         vizPath.setAttribute('d', pathStar);
+         vizPath.setAttribute('fill', color);
+
+         // Affichage de la note et des films
+         updateRatingsUI(vizData.avgRating, vizData.topRatedFilms);
+         break;
+      case 5: // Étape Wolverine (Fin)
+         clearLightsaberStep();
+         targetPath = ""; // On n'utilise plus vizPath ici
+         targetVB = { x: 0, y: 0, w: 800, h: 600 };
+         labelText = "Ciné-Mutant : X-Men & Logan";
+         color = "#ffca28";
          break;
    }
 
@@ -153,19 +219,83 @@ function updateViz(stepIndex) {
       }
    }
 
+   // Visibilité du Ratings Layer (Étoile) : seulement à l'étape 4
+   const ratingsLayer = document.getElementById('ratings-layer');
+   if (ratingsLayer) {
+      if (stepIndex === 4) {
+         animate(ratingsLayer, {
+            opacity: 1,
+            scale: [0.5, 1],
+            duration: 800,
+            easing: 'easeOutQuart',
+            begin: () => {
+               ratingsLayer.style.pointerEvents = "auto";
+               animateRatings(vizData.avgRating);
+            }
+         });
+      } else {
+         animate(ratingsLayer, {
+            opacity: 0,
+            scale: 0.5,
+            duration: 500,
+            easing: 'easeInQuart',
+            complete: () => { ratingsLayer.style.pointerEvents = "none"; }
+         });
+      }
+   }
+
+   // Visibilité du Wolverine Layer : seulement à l'étape 5
+   const wolverineLayer = document.getElementById('wolverine-layer');
+   if (wolverineLayer) {
+      if (stepIndex === 5) {
+         animate(wolverineLayer, {
+            opacity: 1,
+            scale: [0.8, 1],
+            duration: 800,
+            easing: 'easeOutBack',
+            begin: () => { wolverineLayer.style.pointerEvents = "auto"; }
+         });
+      } else {
+         animate(wolverineLayer, {
+            opacity: 0,
+            scale: 0.8,
+            duration: 500,
+            easing: 'easeInQuart',
+            complete: () => { wolverineLayer.style.pointerEvents = "none"; }
+         });
+      }
+   }
+
    // Logique de Morphing du chemin SVG
-   // On cache le morph-path si on est à l'étape du sabre laser ou du globe
-   const hideMorphPath = (stepIndex === 1 || stepIndex === 2 || stepIndex === 3);
+   // On cache le morph-path si on est sur les étapes avec des graphiques complexes
+   const hideMorphPath = (stepIndex === 1 || stepIndex === 2 || stepIndex === 3 || stepIndex === 4);
    if (hideMorphPath) {
       animate(vizPath, { opacity: 0, duration: 500, easing: 'linear' });
+      // Reset cursor
+      vizPath.style.cursor = "default";
    } else {
       let finalOpacity = 1;
 
-      // Si le path est déjà invisible (opacity < 0.1), on change direct le path
-      // Sinon on fait un fondu sortant, on change, et on fait un fondu entrant
+      // Si le path est déjà invisible (opacity < 0.1) on change direct le path
+      // Sinon on fait un fondu sortant on change et on fait un fondu entrant
       const currentOpacity = parseFloat(window.getComputedStyle(vizPath).opacity);
 
-      if (currentOpacity < 0.1) {
+      // On désactive le morphing complexe pour l'étape 5 au profit d'un fondu
+      if (stepIndex === 5) {
+         animate(vizPath, { opacity: 0, duration: 400, easing: 'linear' });
+      }
+      else if ((stepIndex === 4 && currentOpacity > 0.5)) {
+         animate(vizPath, {
+            d: targetPath,
+            fill: color,
+            opacity: 1,
+            duration: 1000,
+            easing: 'easeInOutQuad'
+         });
+      }
+
+      else if (currentOpacity < 0.1) {
+         vizPath.style.filter = 'none';
          if (targetPath) {
             vizPath.setAttribute('d', targetPath);
             vizPath.setAttribute('fill', color);
@@ -189,6 +319,32 @@ function updateViz(stepIndex) {
 
    // Logique de Zoom (ViewBox)
    if (stepIndex !== 3) {
+      // Ajustement pour mobile : on "zoom" en rognant les marges latérales inutiles
+      // et on centre spécifiquement chaque graphique
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+         // Largeur visible de 600unités -> Zoom ~1.33x
+         // On ajuste X et Y pour centrer l'élément principal
+         let mobileX = 100;
+         let mobileY = 0;
+
+         if (stepIndex === 2) {
+            // Sabre Laser : centre approx à x=450 -> offset x=150, y=120
+            mobileX = 150;
+            mobileY = 120;
+         } else if (stepIndex === 4) {
+            // Étoile
+            mobileX = 100;
+            mobileY = 50;
+         } else if (stepIndex === 5) {
+            // Caméra : centre approx à x=375 -> offset x=75, y=50
+            mobileX = 75;
+            mobileY = 50;
+         }
+
+         targetVB = { x: mobileX, y: mobileY, w: 600, h: 600 };
+      }
+
       animate(window.currentViewBox, {
          x: targetVB.x, y: targetVB.y, w: targetVB.w, h: targetVB.h,
          duration: 1000, easing: 'linear',

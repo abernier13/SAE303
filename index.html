@@ -2,29 +2,43 @@
 <html lang="fr">
 
 <head>
-    <!-- Configuration de base et polices -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinéma Box-Office - L'Analytique</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Importation des polices Outfit (moderne) et Playfair (élégant) -->
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
-    <!-- Feuilles de style (Design global + Spécificités globe) -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/globe.css">
+    <link rel="stylesheet" href="./css/popcorn.css">
+    <link rel="stylesheet" href="./css/lightsaber.css">
+    <link rel="stylesheet" href="./css/ratings.css">
     <link rel="shortcut icon" type="image/svg" href="/img/svg/objets/cinema-alt-svgrepo-com.svg" />
 </head>
+<script>
+    // Script immédiat pour éviter l'affichage pendant une microseconde de l'overlay au refresh
+    if (sessionStorage.getItem('experienceStarted') === 'true') {
+        document.documentElement.classList.add('hide-overlay-immediately');
+    }
+</script>
 
 <body>
-
-    <!-- Section d'accueil (Hero) -->
-    <header class="hero">
-        <div class="hero-content">
-            <div class="hero-graphic">
-                <!-- SVG du crâne de Terminator (Inline pour pouvoir l'animer en CSS) -->
+    <!-- Overlay d'introduction pour débloquer l'audio et l'immersion -->
+    <div id="experience-overlay">
+        <div class="overlay-content">
+            <h1 id="titleFirst">Bienvenue amis du septième art</h1>
+            <p>Une expérience immersive à travers le Box-Office mondial.</p>
+            <button id="btn-start-experience">PLONGER DANS L'EXPÉRIENCE</button>
+            <p class="overlay-note">(Activez le son pour une immersion totale)</p>
+        </div>
+    </div>
+    <!-- Section d'accueil -->
+    <header class="intro-header">
+        <div class="intro-content">
+            <div class="intro-graphic">
+                <!-- SVG du Terminator -->
                 <svg class="terminator-svg" viewBox="0 0 317.5 158.75" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(0,-217.62501)">
                         <path
@@ -206,8 +220,8 @@
                     </g>
                 </svg>
             </div>
-            <div class="hero-text">
-                <h1><span>L'Ère du Box-Office</span></h1>
+            <div class="intro-text">
+                <h1>L'Ère du Box-Office</h1>
                 <p>Une plongée immersive dans les données du cinéma.</p>
                 <div class="scroll-indicator">Scrollez pour découvrir</div>
             </div>
@@ -216,7 +230,7 @@
 
     <main class="scrolly-container">
 
-        <!-- Sticky Graphic Side -->
+        <!-- Affichage des graphiques -->
         <div class="sticky-graphic">
             <div id="globe-container">
                 <canvas id="globe-canvas"></canvas>
@@ -226,16 +240,21 @@
             <div id="label-global" class="viz-label-global"></div>
 
             <svg id="viz" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
-                <!-- innovative-shape path will be morphed -->
                 <path id="morph-path" d="" />
 
                 <text id="viz-label" x="400" y="550" text-anchor="middle" class="viz-text"
                     style="display: none;"></text>
                 <g id="chart-labels"></g>
 
-                <!-- Conteneurs pour l'étape 2 -->
+                <!-- Conteneurs pour l'étape 2-->
                 <g id="lightsaber-viz" style="opacity: 0; pointer-events: none;"></g>
                 <g id="logo-viz" style="opacity: 0; pointer-events: none;"></g>
+
+                <!-- Conteneur pour l'étape 4  -->
+                <g id="ratings-layer" style="opacity: 0; pointer-events: none;"></g>
+
+                <!-- Conteneur pour l'étape 5 -->
+                <g id="wolverine-layer" style="opacity: 0; pointer-events: none;"></g>
             </svg>
 
             <div class="sticky-graphic" id="popcorn-container">
@@ -1135,13 +1154,13 @@
             </div>
         </div>
 
-        <!-- Scrolling Steps Side -->
+        <!-- Etape du scrollytelling qui affiche le sommaire à droite -->
         <article class="scrolly-steps">
             <div class="step" data-step="1">
                 <div class="step-content">
                     <h2>Un Monde de Cinéma</h2>
                     <p>En l'an 2000, le cinéma a généré des milliards. Explorons comment ces revenus sont répartis à
-                        travers le globe.</p>
+                        travers l'Amérique, l'Asie et l'Europe</p>
                 </div>
             </div>
 
@@ -1149,7 +1168,7 @@
                 <div class="step-content">
                     <h2>Domination Mondiale</h2>
                     <p>La répartition entre revenus domestiques (USA) et internationaux montre l'impact global
-                        d'Hollywood.</p>
+                        d'Hollywood sur la scène international.</p>
                     <div class="stat-highlight">
                         <span id="stat-domestic">0</span>% Domestique
                     </div>
@@ -1172,8 +1191,8 @@
             </div>
             <div class="step" data-step="5" style="height: 50vh;">
                 <div class="step-content">
-                    <h2>Fin</h2>
-                    <p>Données issues du box office mondial depuis les années 2000</p>
+                    <h2>L'Ère des Mutants</h2>
+                    <p>Wolverine et les X-Men ont redéfini le blockbuster moderne. Cliquez sur Logan !</p>
                 </div>
             </div>
         </article>

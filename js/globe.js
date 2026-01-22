@@ -1,14 +1,15 @@
 // La logique du Globe 3D (librairie Cobe)
-// Ce fichier gère l'affichage de la terre, la rotation, et la détection d'où se trouve la souris.
+// Ce fichier gère l'affichage de la Terre, la rotation, et la détection d'où se trouve la souris.
 import createGlobe from 'https://esm.sh/cobe';
 import { CONTINENT_DOTS } from './constants.js';
 
 // Variables d'état pour la rotation et les interactions
-let phi = 0;
-let theta = 0;
+let phi = 0;  // gère la rotation horizontal
+let theta = 0; // gère la rotation vertical
 let rotationVelocity = 0.005;
 let pointerInteracting = null;
-let pointerCurrentX = 0;
+let pointerCurrentX = 0; // valeur par défaut sur l'axe X
+let pointerCurrentY = 0; // valeur par défaut sur l'axe Y
 let isHoveringGlobe = false;
 let currentFocus = null;
 
@@ -26,7 +27,7 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         height: 500 * 2,
         phi: 0,
         theta: 0,
-        dark: 1, // On est sur un thème sombre
+        dark: 1, // thème sombre
         diffuse: 1.2,
         mapSamples: 8000,
         mapBrightness: 6,
@@ -35,21 +36,21 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         glowColor: [1, 1, 1], // Aura blanche
         markers: [],
         onRender: (state) => {
-            // Si on ne touche à rien, le globe tourne tout seul avec un peu d'inertie
+            // Si on ne touche à rien le globe tourne tout seul 
             if (pointerInteracting !== null) {
                 // On est en train de "grabber" le globe, la rotation est gérée par la souris
             } else {
                 if (isHoveringGlobe) {
-                    // Si on survole, on ralentit presque tout (effet pause)
+                    // Si on survole on met en pause l'animation
                     rotationVelocity *= 0.9;
                 } else {
-                    // Sinon, on maintient une vitesse de croisière douce
+                    // Sinon on maintient une vitesse douce
                     if (rotationVelocity > 0.005) {
                         rotationVelocity *= 0.95;
                     } else if (rotationVelocity < 0.005) {
                         rotationVelocity += 0.0005;
-                        if (rotationVelocity > 0.005) rotationVelocity = 0.005;
                     }
+                    theta *= 0.95; // Pour revenir à la position initiale de manière douce
                 }
                 phi += rotationVelocity;
             }
@@ -79,10 +80,12 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         if (labelContinent) labelContinent.style.opacity = 0;
     });
 
-    // Début du "drag" (grab)
+    // Début du "drag" 
     container.addEventListener('pointerdown', (e) => {
         pointerInteracting = e.clientX;
         pointerCurrentX = e.clientX;
+        pointerInteracting = e.clientY;
+        pointerCurrentY = e.clientY;
         container.style.cursor = 'grabbing';
     });
 
@@ -96,11 +99,19 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
     container.addEventListener('pointermove', (e) => {
         // Rotation manuelle
         if (pointerInteracting !== null) {
-            const delta = e.clientX - pointerCurrentX;
+            const deltaX = e.clientX - pointerCurrentX;
             pointerCurrentX = e.clientX;
+            const deltaY = e.clientY - pointerCurrentY;
+            pointerCurrentY = e.clientY;
             const speed = 0.005;
-            phi += delta * speed;
-            rotationVelocity = delta * speed;
+            phi += deltaX * speed;
+            theta += deltaY * speed;
+
+            // On limite la rotation verticale pour ne pas retourner le globe
+            if (theta > 0.5) theta = 0.5;
+            if (theta < -0.5) theta = -0.5;
+
+            rotationVelocity = deltaX * speed;
         }
 
         // Calcul mathématique pour projeter la souris (2D) sur le globe (3D)
@@ -109,8 +120,9 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
         const y = e.clientY - rect.top;
         const r = rect.width / 2;
         const dist = Math.sqrt((x - r) ** 2 + (y - r) ** 2);
+        const precision = 0.99;
 
-        if (dist < r) {
+        if (dist < r * precision) {
             const globeX = (x - r) / r;
             let currentRotation = phi % (2 * Math.PI);
             if (currentRotation < 0) currentRotation += 2 * Math.PI;
@@ -124,7 +136,8 @@ export function initGlobeController(canvas, container, labelContinent, vizData) 
 
             // Latitude (Nord-Sud)
             const globeY = (y - (rect.height / 2)) / r;
-            const mouseLatRad = -Math.asin(globeY);
+            // On ajoute theta pour compenser l'inclinaison verticale du globe
+            const mouseLatRad = -Math.asin(globeY) + theta;
             const mouseLatDeg = mouseLatRad * (180 / Math.PI);
 
             // On vérifie si on est dans les zones de nos continents

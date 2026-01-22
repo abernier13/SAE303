@@ -1,0 +1,52 @@
+#popcorn-container {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    position: absolute;
+    top: -5%;
+    left: 10%;
+    width: 60rem;
+    height: 110%;
+    transform: scale(1.2) translateX(-7%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 5;
+}
+
+@media (max-width: 768px) {
+    #popcorn-container {
+        transform: scale(0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.popcorn-stripe {
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.popcorn-value-bg {
+    fill: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+}
+
+.popcorn-value {
+    fill: #fff;
+    font-family: var(--font-body);
+    font-size: 22px;
+    font-weight: bold;
+    opacity: 0;
+}
+
+.popcorn-text {
+    fill: rgba(255, 255, 255, 0.95);
+    font-family: var(--font-body);
+    font-weight: 600;
+    opacity: 0;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-anchor: end;
+}

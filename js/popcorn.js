@@ -1,5 +1,4 @@
-// Ce fichier gère l'animation dynamique du cornet de popcorn (le Top 5 Genres).
-// On crée les textes à la volée et on fait grandir les bandes rouges.
+// Ce fichier gère l'animation dynamique du cornet de popcorn (le top 5 des genres de film les plus rentables)
 import { animate, stagger } from 'https://esm.sh/animejs@4.2.2';
 
 // Met à jour les éléments du SVG avec les données réelles
@@ -11,14 +10,20 @@ export function updatePopcornUI(genres) {
     const labelsLayer = document.getElementById('popcorn-labels-layer');
     if (labelsLayer) labelsLayer.innerHTML = '';
 
+    // Création d'un conteneur de définitions pour les masques de découpe
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    if (labelsLayer) {
+        labelsLayer.appendChild(defs);
+    }
+
     // Les IDs des bandes rouges dans le SVG (de gauche à droite)
     // Rotations calculées précisément pour être parallèles aux bords inclinés
     const configs = [
-        { id: 'Rectangle_1', rotation: -96.2 },
-        { id: 'Rectangle_3', rotation: -93.7 },
-        { id: 'Rectangle_5', rotation: -91.2 },
-        { id: 'Rectangle_7', rotation: -88.7 },
-        { id: 'Rectangle_9', rotation: -86.2 }
+        { id: 'Rectangle_1' },
+        { id: 'Rectangle_3' },
+        { id: 'Rectangle_5' },
+        { id: 'Rectangle_7' },
+        { id: 'Rectangle_9' }
     ];
 
     genres.forEach((genre, index) => {
@@ -31,96 +36,140 @@ export function updatePopcornUI(genres) {
             if (polygon) {
                 polygon.classList.add('popcorn-stripe');
                 const scaleFactor = (genre.totalRevenue / maxRevenue);
-                polygon.setAttribute('data-target-scale', scaleFactor.toFixed(3));
 
-                polygon.style.transformOrigin = "center bottom";
-                polygon.style.transformBox = "fill-box";
-                polygon.style.opacity = "0";
-                polygon.style.transform = "scaleY(0)";
-
-                // Calcul du sommet et du centre
+                // Calculs de positions
                 const points = polygon.getAttribute('points').trim().split(/\s+/).map(Number);
-                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxYVal = -Infinity;
+
                 for (let i = 0; i < points.length; i += 2) {
                     const x = points[i]; const y = points[i + 1];
                     if (x < minX) minX = x; if (x > maxX) maxX = x;
-                    if (y < minY) minY = y; if (y > maxY) maxY = y;
+                    if (y < minY) minY = y; if (y > maxYVal) maxYVal = y;
                 }
-                const centerX = (minX + maxX) / 2;
-                const finalTopY = maxY - (maxY - minY) * scaleFactor;
 
-                // 1. Étiquette REVENU (au sommet) - En BLANC avec FOND
+                let sumX = 0, countX = 0;
+                for (let i = 0; i < points.length; i += 2) {
+                    if (Math.abs(points[i + 1] - maxYVal) < 1) {
+                        sumX += points[i]; countX++;
+                    }
+                }
+                const centerX = countX > 0 ? sumX / countX : (minX + maxX) / 2;
+                const finalTopY = maxYVal - (maxYVal - minY) * scaleFactor;
+
+                // Masque de découpe pour l'animation de taille des bandes en jouant sur le clip-path
+                const clipId = `clip-popcorn-${index}`;
+                const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+                clipPath.setAttribute("id", clipId);
+                
+                const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                clipRect.classList.add('popcorn-clip-rect');
+                clipRect.setAttribute("x", minX - 10); // Marge de sécurité
+                clipRect.setAttribute("width", (maxX - minX) + 20);
+                // On stocke les valeurs cibles pour l'animation
+                clipRect.setAttribute("data-y-start", maxYVal);
+                clipRect.setAttribute("data-y-end", finalTopY);
+                clipRect.setAttribute("data-h-end", maxYVal - finalTopY);
+                
+                clipPath.appendChild(clipRect);
+                defs.appendChild(clipPath);
+                polygon.setAttribute("clip-path", `url(#${clipId})`);
+
+                // étiquette du revenu (au sommet)
                 const revenueMillions = (genre.totalRevenue / 1000000).toLocaleString('en-US', {
-                    minimumFractionDigits: 1,
-                    maximumFractionDigits: 1
+                    minimumFractionDigits: 1, maximumFractionDigits: 1
                 }) + "M";
                 const revenueText = `$${revenueMillions}`;
 
-                // Création du fond (rect) - Padding augmenté
                 const bgW = revenueText.length * 11 + 20;
                 const bgH = 34;
                 const bgEl = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                 bgEl.classList.add('popcorn-value-bg');
-                bgEl.setAttribute("fill", "rgba(0, 0, 0, 0.5)");
                 bgEl.setAttribute("rx", "8");
                 bgEl.setAttribute("width", bgW);
                 bgEl.setAttribute("height", bgH);
                 bgEl.setAttribute("x", centerX - bgW / 2);
-                bgEl.setAttribute("y", finalTopY - 15 - bgH + 8);
-                bgEl.style.opacity = "0";
+                bgEl.setAttribute("y", finalTopY - 25); 
                 if (labelsLayer) labelsLayer.appendChild(bgEl);
 
                 const valueEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
                 valueEl.classList.add('popcorn-value');
-                valueEl.setAttribute("fill", "#fff");
                 valueEl.setAttribute("text-anchor", "middle");
-                valueEl.setAttribute("font-family", "'Outfit', sans-serif");
-                valueEl.setAttribute("font-size", "22");
-                valueEl.setAttribute("font-weight", "bold");
-                valueEl.textContent = revenueText;
-
                 valueEl.setAttribute("x", centerX);
-                valueEl.setAttribute("y", finalTopY - 15);
-                valueEl.style.opacity = "0";
+                valueEl.setAttribute("y", finalTopY - 7);
+                valueEl.textContent = revenueText;
                 if (labelsLayer) labelsLayer.appendChild(valueEl);
 
-                // 2. Étiquette GENRE + FILM (verticale dans la bande)
-                const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                textEl.classList.add('popcorn-text');
-                textEl.setAttribute("fill", "rgba(255, 255, 255, 0.95)");
-                textEl.setAttribute("text-anchor", "start");
-                textEl.setAttribute("font-family", "'Outfit', sans-serif");
-                textEl.setAttribute("font-size", "18");
-                textEl.setAttribute("font-weight", "600");
+                // Le genre (dans la bande)
+                const genreText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                genreText.classList.add('popcorn-text');
+                
+                const angle1 = Math.atan((points[4] - points[2]) / (points[5] - points[3])) * 180 / Math.PI;
+                const angle2 = Math.atan((points[6] - points[0]) / (points[7] - points[1])) * 180 / Math.PI;
+                const rotation = (angle1 + angle2) / 2;
 
-                const textY = maxY - 30;
-                // On stocke la rotation pour l'animation
-                textEl.setAttribute('data-rotation', config.rotation);
+                const genreY = maxYVal - 30;
+                genreText.setAttribute("x", centerX);
+                genreText.setAttribute("y", genreY);
+                genreText.style.transform = `rotate(${-rotation}deg)`;
+                genreText.style.transformOrigin = `${centerX}px ${genreY}px`;
+                genreText.textContent = genre.name.toUpperCase();
+                
+                // Taille de police adaptative pour le genre
+                genreText.style.fontSize = "14px";
+                genreText.style.fontWeight = "bold";
 
-                // Positionnement initial
-                textEl.style.transform = `translate(${centerX}px, ${textY}px) rotate(${config.rotation}deg)`;
-                textEl.style.transformOrigin = "left center";
-                textEl.style.opacity = "0";
+                if (labelsLayer) labelsLayer.appendChild(genreText);
 
-                textEl.textContent = `${genre.name.toUpperCase()} • ${genre.topMovie.title.toUpperCase()}`;
-                if (labelsLayer) labelsLayer.appendChild(textEl);
+                // Le film (à droite du graphique)
+                const movieGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                movieGroup.classList.add('popcorn-movie-right');
+
+                const listX = 980; // Position X fixe à droite du cornet
+
+                // Ligne de liaison pointillée
+                const connector = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                connector.setAttribute("x1", centerX + 10);
+                connector.setAttribute("y1", finalTopY);
+                connector.setAttribute("x2", listX - 10);
+                connector.setAttribute("y2", finalTopY);
+                connector.setAttribute("stroke", "orange");
+                connector.setAttribute("stroke-width", "2");
+                connector.setAttribute("stroke-dasharray", "4");
+                connector.setAttribute("opacity", "0.5");
+                movieGroup.appendChild(connector);
+
+                const movieTitle = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                movieTitle.setAttribute("x", listX);
+                movieTitle.setAttribute("y", finalTopY + 5);
+                movieTitle.textContent = genre.topMovie.title.toUpperCase();
+                movieTitle.style.fontSize = "13px";
+                movieTitle.style.fill = "white";
+                movieTitle.style.fontFamily = "'Outfit', sans-serif";
+                
+                movieGroup.appendChild(movieTitle);
+                if (labelsLayer) labelsLayer.appendChild(movieGroup);
             }
         }
     });
 }
 
-// Lance les animations Anime.js
 export function animatePopcorn() {
-    // 1. Les bandes grimpent
-    animate('.popcorn-stripe', {
-        scaleY: (el) => [0, el.getAttribute('data-target-scale') || 1],
-        opacity: [0, 1],
+    // Les bandes grimpent (via le masque de découpe)
+    animate('.popcorn-clip-rect', {
+        y: [el => el.getAttribute('data-y-start'), el => el.getAttribute('data-y-end')],
+        height: [0, el => el.getAttribute('data-h-end')],
         easing: 'easeOutExpo',
         duration: 800,
         delay: stagger(100)
     });
 
-    // 2. Les valeurs de revenus et leurs fonds
+    // On gère l'opacité de la bande elle-même
+    animate('.popcorn-stripe', {
+        opacity: [0, 1],
+        duration: 400
+    });
+
+    // Les valeurs de revenus
     animate('.popcorn-value, .popcorn-value-bg', {
         translateY: [20, 0],
         opacity: [0, 1],
@@ -129,13 +178,20 @@ export function animatePopcorn() {
         easing: 'easeOutExpo'
     });
 
-    // 3. Les textes Genre/Film (maintien de leur rotation spécifique)
+    // Les Genres (dans les bandes)
     animate('.popcorn-text', {
-        translateY: [20, 0],
-        rotate: (el) => parseFloat(el.getAttribute('data-rotation')),
         opacity: [0, 1],
-        delay: stagger(105, { start: 450 }),
+        delay: stagger(100, { start: 500 }),
         duration: 800,
+        easing: 'easeOutExpo'
+    });
+
+    // Les Films (à droite)
+    animate('.popcorn-movie-right', {
+        translateX: [20, 0],
+        opacity: [0, 1],
+        delay: stagger(100, { start: 600 }),
+        duration: 1000,
         easing: 'easeOutExpo'
     });
 }
