@@ -34,11 +34,11 @@
             <p class="overlay-note">(Activez le son pour une immersion totale)</p>
         </div>
     </div>
-    <!-- Section d'accueil (Hero) -->
+    <!-- Section d'accueil -->
     <header class="hero">
         <div class="hero-content">
             <div class="hero-graphic">
-                <!-- SVG du crâne de Terminator (Inline pour pouvoir l'animer en CSS) -->
+                <!-- SVG du Terminator -->
                 <svg class="terminator-svg" viewBox="0 0 317.5 158.75" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(0,-217.62501)">
                         <path
@@ -230,7 +230,7 @@
 
     <main class="scrolly-container">
 
-        <!-- Sticky Graphic Side -->
+        <!-- Affichage des graphiques -->
         <div class="sticky-graphic">
             <div id="globe-container">
                 <canvas id="globe-canvas"></canvas>
@@ -240,7 +240,6 @@
             <div id="label-global" class="viz-label-global"></div>
 
             <svg id="viz" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
-                <!-- innovative-shape path will be morphed -->
                 <path id="morph-path" d="" />
 
                 <text id="viz-label" x="400" y="550" text-anchor="middle" class="viz-text"
@@ -251,8 +250,11 @@
                 <g id="lightsaber-viz" style="opacity: 0; pointer-events: none;"></g>
                 <g id="logo-viz" style="opacity: 0; pointer-events: none;"></g>
 
-                <!-- Conteneur pour l'étape 4 (Étoile) -->
+                <!-- Conteneur pour l'étape 4  -->
                 <g id="ratings-layer" style="opacity: 0; pointer-events: none;"></g>
+
+                <!-- Conteneur pour l'étape 5 (Wolverine) -->
+                <g id="wolverine-layer" style="opacity: 0; pointer-events: none;"></g>
             </svg>
 
             <div class="sticky-graphic" id="popcorn-container">
@@ -1152,7 +1154,7 @@
             </div>
         </div>
 
-        <!-- Scrolling Steps Side -->
+        <!-- Etape du scrollytelling qui affiche le sommaire à droite -->
         <article class="scrolly-steps">
             <div class="step" data-step="1">
                 <div class="step-content">
@@ -1189,8 +1191,9 @@
             </div>
             <div class="step" data-step="5" style="height: 50vh;">
                 <div class="step-content">
-                    <h2>Fin</h2>
-                    <p>Données issues du box office mondial depuis les années 2000</p>
+                    <h2>L'Ère des Mutants</h2>
+                    <p>Wolverine et les X-Men ont redéfini le blockbuster moderne. Cliquez sur les griffes pour voir
+                        Logan !</p>
                 </div>
             </div>
         </article>

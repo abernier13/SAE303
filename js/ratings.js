@@ -33,13 +33,13 @@ export function updateRatingsUI(avgRating, films = []) {
 
     // Logique de couleur dynamique
     if (film.rating >= 8.5) {
-        // Excellence pure : Vert/Doré
-        liquidColorStart = "#a8ff78";
+        // Excellent : vert/doré
+        liquidColorStart = "#d14120ff";
         liquidColorEnd = "#78ffd6";
         strokeColor = "#78ff9d";
         glowColor = "rgba(120, 255, 157, 0.4)";
     } else if (budgetFactor > 0.8) {
-        // Gros budget, note "normale" pour le top : Bleu Premium
+        // Gros budget, note "normale" pour le top : bleu 
         liquidColorStart = "#4facfe";
         liquidColorEnd = "#00f2fe";
         strokeColor = "#00f2fe";
@@ -113,7 +113,7 @@ export function updateRatingsUI(avgRating, films = []) {
     fgStar.style.filter = `drop-shadow(0 0 15px ${glowColor})`;
     container.appendChild(fgStar);
 
-    // Infos du film
+    // Titre du film
     const textTitle = createSVGText(400, 310, film.title, "rating-film-title", "#fff", "28px", "bold");
     container.appendChild(textTitle);
 

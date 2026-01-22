@@ -1,5 +1,5 @@
 // Ce fichier regroupe toutes les données statiques qui prendraient trop de place ailleurs.
-// On y trouve les coordonnées pour le globe, les mappings de pays et les chemins SVG simples.
+// On y trouve les coordonnées pour le globe, les mappings de pays et les paths de SVG simples.
 
 // Points GPS (Lat, Lon) pour dessiner les points rouges sur les continents au survol
 export const CONTINENT_DOTS = {
@@ -53,5 +53,8 @@ export const pathStarWars = "M 9.300781 14 C 8 14 7 15 7 16.402344 C 7 17 7.1992
 // Graphique sur la note des films
 export const pathStar = "M 400 100 L 479 261 L 657 287 L 528 412 L 559 589 L 400 505 L 241 589 L 271 412 L 143 287 L 321 261 Z";
 
-// Icône Caméra de fin (Optimisée pour le morphing depuis l'étoile : 10 points)
-export const pathCamera = "M 200 200 L 600 200 L 600 500 L 200 500 L 200 400 L 150 450 L 150 250 L 200 300 L 200 200 L 400 350 Z";
+// Wolverine - Griffes (Claws)
+export const pathWolverineClaws = "M 280.3 30.04 C 246.9 49.82 209.6 85.51 175.8 127.1 C 128.4 185.4 86.95 254.6 65.99 303.7 L 67.68 312.6 L 75.29 311.2 L 76.12 309.7 C 92.69 279.2 118.1 243.7 148.3 208 C 186.6 146.6 232.4 80.44 280.3 30.04 Z M 394.2 32.76 C 351.2 48.68 297.9 85.55 248.1 130.7 C 183.2 189.7 123.2 262 93.37 315.9 L 94.97 327.5 L 107.9 321.7 C 116.2 311.8 124.9 301.8 132.3 293.7 C 197.1 208.5 303.2 104.3 394.2 32.76 Z M 473 81.09 C 425.5 88.81 366.4 119.4 309.1 160.4 C 237.9 211.3 169.1 277 125.2 329.1 L 126.6 348.6 L 151 347 C 224.7 261.9 349.4 153.3 473 81.09 Z M 47.34 303 L 18 344 V 488 L 55.32 474 C 55.32 474 105.9 491.1 128 491.7 C 159.5 492.5 200.7 443.5 202.7 434 C 204.3 426.1 198.9 419.3 193.9 412.6 C 174 426.8 158.8 433.3 132.1 419.1 C 162.7 413 166.3 413.4 185.7 397.2 C 195.7 388.2 198 377.4 197.2 367.7 C 196.7 361.7 182.9 357.2 174.8 347.2 C 169.2 353.4 164.8 358.5 159.7 364.4 L 110 367.8 L 108.1 341.3 L 79.62 351.3 L 77.04 329.2 L 53.3 333.4 C 51.4 322.8 49.19 311.8 47.34 303 Z";
+
+// Wolverine - Masque (Mask)
+export const pathWolverineMask = "M 36 16.2 L 35 33.6 C 35 34.5 34.6 35.3 34 35.9 L 31 38.5 V 27 L 33 25 C 28.8 25.8 26.7 27.4 25 29 H 24 H 23 C 21.3 27.4 19.2 25.8 15 25 L 17 27 V 38.5 L 14 35.9 C 13.3 35.3 13 34.5 13 33.6 L 12 16.2 C 12 14.1 12.2 12.3 12.7 10.8 C 12.7 10.9 15 3 24 3 S 35.3 10.9 35.3 10.9 C 35.8 12.4 36 14.2 36 16.2 Z";

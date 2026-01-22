@@ -389,7 +389,7 @@ p {
 /* Mobile Responsive */
 @media (max-width: 768px) {
 
-    /* HERO */
+    /* Accueil*/
     .hero-content {
         flex-direction: column;
         padding-top: 2rem;
@@ -423,7 +423,7 @@ p {
         padding: 0 1rem;
     }
 
-    /* SCROLLY LAYOUT REORGANISÉ */
+    /* Scrolly layout*/
     .scrolly-container {
         flex-direction: column;
     }
@@ -433,7 +433,6 @@ p {
         width: 100%;
         height: 60vh;
         top: 25vh;
-        /* Centré verticalement sous le titre */
         z-index: 1;
         background: transparent;
     }
@@ -444,12 +443,10 @@ p {
         z-index: 2;
         background: transparent;
         margin-top: -60vh;
-        /* Permet de superposer les steps au sticky graphic */
     }
 
     .step {
         min-height: 120vh;
-        /* Plus d'espace pour la fluidité */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -465,7 +462,6 @@ p {
     .step-content {
         position: sticky;
         top: 5vh;
-        /* Le titre reste fixé en haut */
         background: transparent;
         box-shadow: none;
         border: none;

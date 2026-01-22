@@ -1,12 +1,13 @@
 // Ce fichier importe les petits modules spécialisés (anime.js, globe 3D)
 
 import { animate, createTimeline, createDrawable } from 'https://esm.sh/animejs@4.2.2';
-import { pathStarWars, pathStar, pathCamera } from './constants.js';
+import { pathStarWars, pathStar, pathWolverineClaws, pathWolverineMask } from './constants.js';
 import { vizData, loadData } from './data.js';
 import { initGlobeController } from './globe.js';
 import { updatePopcornUI, animatePopcorn } from './popcorn.js';
 import { updateRatingsUI, animateRatings } from './ratings.js';
 import { initLightsaberStep, clearLightsaberStep, primeAudio } from './lightsaber.js';
+import { initWolverineUI } from './wolverine.js';
 
 // Récupération des éléments HTML (DOM) dont on va avoir besoin
 const experienceOverlay = document.getElementById('experience-overlay');
@@ -37,6 +38,7 @@ async function init() {
       vizPath.setAttribute('d', ""); // On vide le path SVG au début (car c'est le globe qui est là)
       setupObserver(); // On lance l'écouteur de scroll
       initGlobeController(globeCanvas, globeContainer, labelContinent, vizData); // On allume le globe
+      initWolverineUI(); // On prépare le calque Wolverine
       initHeroTitleAnimation(); // L'animation du titre Hero
       initSplashTitleAnimation(); // L'animation du titre de l'overlay
 
@@ -180,15 +182,20 @@ function updateViz(stepIndex) {
          labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
          color = "#e50914";
 
+         // Synchronisation : on donne à vizPath la forme de l'étoile en coulisses
+         // pour que le prochain morphing (vers Wolverine) parte du bon endroit.
+         vizPath.setAttribute('d', pathStar);
+         vizPath.setAttribute('fill', color);
+
          // Affichage de la note et des films
          updateRatingsUI(vizData.avgRating, vizData.topRatedFilms);
          break;
-      case 5: // Étape Caméra (Fin)
+      case 5: // Étape Wolverine (Fin)
          clearLightsaberStep();
-         targetPath = pathCamera;
+         targetPath = ""; // On n'utilise plus vizPath ici
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
-         labelText = "Réalisation & Production";
-         color = "#333";
+         labelText = "Ciné-Mutant : X-Men & Logan";
+         color = "#ffca28";
          break;
    }
 
@@ -224,11 +231,25 @@ function updateViz(stepIndex) {
       }
    }
 
+   // Visibilité du Wolverine Layer : seulement à l'étape 5
+   const wolverineLayer = document.getElementById('wolverine-layer');
+   if (wolverineLayer) {
+      if (stepIndex === 5) {
+         wolverineLayer.style.opacity = 1;
+         wolverineLayer.style.pointerEvents = "auto";
+      } else {
+         wolverineLayer.style.opacity = 0;
+         wolverineLayer.style.pointerEvents = "none";
+      }
+   }
+
    // Logique de Morphing du chemin SVG
    // On cache le morph-path si on est sur les étapes avec des graphiques complexes
    const hideMorphPath = (stepIndex === 1 || stepIndex === 2 || stepIndex === 3 || stepIndex === 4);
    if (hideMorphPath) {
       animate(vizPath, { opacity: 0, duration: 500, easing: 'linear' });
+      // Reset cursor
+      vizPath.style.cursor = "default";
    } else {
       let finalOpacity = 1;
 
@@ -236,23 +257,17 @@ function updateViz(stepIndex) {
       // Sinon on fait un fondu sortant on change et on fait un fondu entrant
       const currentOpacity = parseFloat(window.getComputedStyle(vizPath).opacity);
 
-      if (stepIndex === 5 || (stepIndex === 4 && currentOpacity > 0.5)) {
+      // On désactive le morphing complexe pour l'étape 5 au profit d'un fondu
+      if (stepIndex === 5) {
+         animate(vizPath, { opacity: 0, duration: 400, easing: 'linear' });
+      }
+      else if ((stepIndex === 4 && currentOpacity > 0.5)) {
          animate(vizPath, {
             d: targetPath,
             fill: color,
             opacity: 1,
             duration: 1000,
-            easing: 'easeInOutQuad',
-            // Effet néon si on arrive à la caméra (step 5)
-            update: (anim) => {
-               if (stepIndex === 5) {
-                  const progress = anim.progress / 100;
-                  // On crée un effet de lueur progressive 
-                  vizPath.style.filter = `drop-shadow(0 0 ${progress * 8}px white) drop-shadow(0 0 ${progress * 15}px #f5c518)`;
-               } else {
-                  vizPath.style.filter = 'none';
-               }
-            }
+            easing: 'easeInOutQuad'
          });
       }
 
