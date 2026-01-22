@@ -1,4 +1,3 @@
-/* --- LE CONTENEUR DU GLOBE 3D --- */
 #globe-container {
     position: absolute;
     top: 50%;
@@ -11,7 +10,6 @@
     transition: opacity 0.5s ease;
     pointer-events: auto;
     cursor: grab;
-    /* Curseur main pour indiquer qu'on peut faire tourner */
 }
 
 @media (max-width: 768px) {
@@ -51,10 +49,9 @@
     pointer-events: none;
 }
 
-/* --- LE TOOLTIP (Info sur le continent) --- */
+/* --- LE TOOLTIP (info sur le continent) --- */
 .viz-label-continent {
     position: fixed;
-    /* Il suit la souris partout sur l'écran */
     top: 0;
     left: 0;
     background: rgba(15, 15, 15, 0.95);
@@ -66,7 +63,6 @@
     color: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     pointer-events: none;
-    /* Ne doit pas gêner le clic sur le globe */
     opacity: 0;
     transition: opacity 0.2s ease;
     z-index: 1000;

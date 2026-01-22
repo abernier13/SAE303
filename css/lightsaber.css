@@ -1,4 +1,3 @@
-/* --- GRAPHIQUE SABRE LASER --- */
 #lightsaber-viz,
 #logo-viz {
     transition: opacity 0.5s ease;
@@ -19,7 +18,7 @@
     stroke: var(--accent-gold);
 }
 
-/* Labels et Lignes de rappel */
+/* Labels et lignes de rappel */
 .saber-label-usa {
     fill: #e50914;
     font-family: var(--font-body);

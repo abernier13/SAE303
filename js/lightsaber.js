@@ -4,7 +4,7 @@ import { pathStarWars } from './constants.js';
 // Initialisation du son du sabre laser
 const ignitsound = new Audio('./img/animation_start/son/lightsaber-ignition-6816.mp3');
 
-// Fonction pour "amorcer" l'audio (appelée au clic sur le bouton Start)
+// Fonction pour "amorcer" l'audio (appelée au clic sur le bouton start)
 export function primeAudio() {
     ignitsound.play().then(() => {
         ignitsound.pause();
@@ -28,7 +28,7 @@ export function initLightsaberStep(vizData) {
     saberContainer.style.opacity = 1;
     logoContainer.style.opacity = 1;
 
-    // Création du Logo Star Wars Animé (contours)
+    // Création du Logo Star Wars animé 
     const logoPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     logoPath.setAttribute('d', pathStarWars);
     logoPath.classList.add('saber-logo');
@@ -50,7 +50,7 @@ export function initLightsaberStep(vizData) {
     const domesticWidth = (domesticPct / 100) * totalWidth;
     const foreignWidth = (foreignPct / 100) * totalWidth;
 
-    // Groupe principal du sabre (centré)
+    // Groupe principal du sabre 
     const gSaber = document.createElementNS("http://www.w3.org/2000/svg", "g");
     gSaber.setAttribute('transform', 'translate(150, 420)');
     saberContainer.appendChild(gSaber);
@@ -61,9 +61,9 @@ export function initLightsaberStep(vizData) {
     bladeGroup.setAttribute('transform', 'translate(1, 0)');
     gSaber.appendChild(bladeGroup);
 
-    // Le Manche (Handle) COMPLET - Extrait de icons8-sabre-laser.svg
+    // Manche du sabre laser
     const handleGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    // On aligne précisément le point de sortie (émetteur) du manche avec le début de la lame (ajusté final)
+    // Alignement du manche avec la lame
     handleGroup.setAttribute('transform', 'translate(15, 0) scale(4) rotate(45) translate(-20, -28.5)');
     gSaber.appendChild(handleGroup);
 
@@ -101,7 +101,7 @@ export function initLightsaberStep(vizData) {
     rectWorld.setAttribute('width', '0');
     bladeGroup.appendChild(rectWorld);
 
-    // Animation d'allumage ("Ignition")
+    // Animation d'allumage 
     animate(rectUSA, {
         width: domesticWidth,
         duration: 800,
@@ -114,7 +114,7 @@ export function initLightsaberStep(vizData) {
         easing: 'easeOutExpo'
     });
 
-    // 3. Ajout des Labels et Lignes de rappel
+    // Ajout des Labels et Lignes de rappel
     // Label USA
     const textUSA = document.createElementNS("http://www.w3.org/2000/svg", "text");
     textUSA.textContent = `USA: ${vizData.avgDomestic}%`;

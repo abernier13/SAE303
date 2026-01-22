@@ -1,4 +1,3 @@
-/* --- GRAPHIQUE POPCORN --- */
 #popcorn-container {
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -17,7 +16,6 @@
 
 @media (max-width: 768px) {
     #popcorn-container {
-        /* On hérite de la position sticky de .sticky-graphic (25vh) */
         transform: scale(0.75);
         display: flex;
         justify-content: center;
@@ -28,7 +26,6 @@
 .popcorn-stripe {
     transition: opacity 0.3s ease;
     opacity: 0;
-    /* On retire le transform scaleY qui causait la déformation */
 }
 
 .popcorn-value-bg {
@@ -47,14 +44,9 @@
 .popcorn-text {
     fill: rgba(255, 255, 255, 0.95);
     font-family: var(--font-body);
-    /* font-size: 14px; */
-    /* Sera géré dynamiquement par le JS */
     font-weight: 600;
     opacity: 0;
     writing-mode: vertical-rl;
-    /* Texte vertical */
     text-orientation: upright;
-    /* Caractères droits (empilés) */
     text-anchor: end;
-    /* Aligne le bas du texte vertical avec le point Y */
 }

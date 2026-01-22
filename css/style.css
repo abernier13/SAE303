@@ -25,7 +25,6 @@
     z-index: 9999;
     transition: opacity 1s ease, visibility 1s;
     text-align: center;
-    /* Image de fond avec voile sombre pour la lisibilité */
     background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
         url("../img/animation_start/Salle de cinéma.webp");
     background-size: cover;
@@ -74,7 +73,6 @@
     color: var(--accent-gold);
 }
 
-/* Fix Flash of Overlay */
 .hide-overlay-immediately #experience-overlay {
     display: none !important;
 }
@@ -91,7 +89,6 @@ body {
     color: var(--text-color);
     font-family: var(--font-body);
     overflow-x: hidden;
-    /* On cache le scroll pendant l'overlay */
     height: 100vh;
     overflow-y: hidden;
 }
@@ -159,7 +156,6 @@ p {
 
 .hero-text {
     flex: 0 0 45%;
-    /* On réduit un peu l'espace du texte pour laisser la place au SVG */
 
     p {
         margin-left: 5rem;

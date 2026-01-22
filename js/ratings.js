@@ -121,7 +121,7 @@ export function updateRatingsUI(avgRating, films = []) {
     container.appendChild(textNote);
 
     const budgetMrd = (film.budget / 1000000000).toFixed(2);
-    const textBudget = createSVGText(400, 420, `Budget: $${budgetMrd} Mrd`, "rating-budget", "#aaa", "20px");
+    const textBudget = createSVGText(400, 420, `Budget: $${budgetMrd} Mrd`, "rating-budget", "#ffffffff", "20px");
     container.appendChild(textBudget);
 
     // Flèches de navigation

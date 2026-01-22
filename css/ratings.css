@@ -2,7 +2,6 @@
     transition: opacity 0.5s ease;
 }
 
-/* Style spécifique pour quand la forme est une étoile */
 .viz-star {
     fill: var(--accent-red);
 }
