@@ -172,35 +172,28 @@ function updateViz(stepIndex) {
          clearLightsaberStep();
          targetPath = ""; // Pas de forme SVG ici, c'est le cornet qui s'affiche
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
-         labelText = `Action & Aventure : $${vizData.actionRevenue} Mrd`;
+         //labelText = `Action & Aventure : $${vizData.actionRevenue} Mrd`;
          color = "#221f1f";
          break;
 
-      case 4: // Étape Étoile (Notes IMDb)
+      case 4: // Étape étoile (Notes IMDb)
          clearLightsaberStep();
          targetPath = pathStar;
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
-         labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
-         color = "#e50914";
-
-         // Synchronisation : on donne à vizPath la forme de l'étoile en coulisses
-         // pour que le prochain morphing (vers Wolverine) parte du bon endroit.
-         vizPath.setAttribute('d', pathStar);
-         vizPath.setAttribute('fill', color);
-
+         //labelText = `Note Moyenne IMDb : ${vizData.avgRating}/10`;
          // Affichage de la note et des films
          updateRatingsUI(vizData.avgRating, vizData.topRatedFilms);
          break;
       case 5: // Étape Wolverine (Fin)
          clearLightsaberStep();
-         targetPath = ""; // On n'utilise plus vizPath ici
+         targetPath = ""; 
          targetVB = { x: 0, y: 0, w: 800, h: 600 };
          labelText = "Ciné-Mutant : X-Men & Logan";
          color = "#ffca28";
          break;
    }
 
-   // Visibilité du Globe : on l'allume seulement à l'étape 1
+   // Visibilité du Globe : seulement à l'étape 1
    if (stepIndex !== 1) {
       globeContainer.style.opacity = 0;
       globeContainer.style.pointerEvents = "none";

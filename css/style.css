@@ -172,7 +172,7 @@ p {
     animation: terminator-transform 10s infinite;
 }
 
-/* --- ANIMATION DU TERMINATOR --- */
+/* --- Animation du Terminator --- */
 
 /* On anime chaque chemin (path) du SVG individuellement */
 .terminator-svg path {
@@ -418,6 +418,53 @@ p {
 
     .scrolly-container {
         flex-direction: column;
+    }
+
+    /* Affiche le graphique au-dessus des steps sur mobile */
+    .sticky-graphic {
+        order: 1;
+        position: static;
+        width: 90vw;
+        max-width: 90vw;
+        min-width: 0;
+        height: auto;
+        margin: 2rem auto 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        z-index: 1;
+    }
+
+    #viz {
+        width: 90vw !important;
+        max-width: 90vw !important;
+        height: auto !important;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .scrolly-steps {
+        order: 2;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        background: transparent;
+        padding: 0 0.5rem;
+    }
+
+    .step-content {
+        position: static;
+        background: rgba(20, 20, 20, 0.85);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        border: none;
+        max-width: 100%;
+        width: 100%;
+        text-align: center;
+        padding: 1rem 0.5rem;
+        z-index: 2;
     }
 
     .scrolly-steps {

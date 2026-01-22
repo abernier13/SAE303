@@ -25,7 +25,7 @@ export function updateRatingsUI(avgRating, films = []) {
     const height = maxY - minY;
     const fillY = maxY - (height * budgetFactor);
 
-    // Détermination de la couleur en fonction de l'efficience (Note / Budget)
+    // Détermination de la couleur en fonction de l'efficience (note / budget)
     let liquidColorStart = "#ffed4e";
     let liquidColorEnd = "#f5c518";
     let strokeColor = "#444";
