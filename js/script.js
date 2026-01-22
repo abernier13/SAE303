@@ -7,7 +7,7 @@ import { initGlobeController } from './globe.js';
 import { updatePopcornUI, animatePopcorn } from './popcorn.js';
 import { updateRatingsUI, animateRatings } from './ratings.js';
 import { initLightsaberStep, clearLightsaberStep, primeAudio } from './lightsaber.js';
-import { initWolverineUI } from './wolverine.js';
+import { initWolverineUI, primeWolverineAudio } from './wolverine.js';
 
 // Récupération des éléments HTML (DOM) dont on va avoir besoin
 const experienceOverlay = document.getElementById('experience-overlay');
@@ -39,7 +39,7 @@ async function init() {
       setupObserver(); // On lance l'écouteur de scroll
       initGlobeController(globeCanvas, globeContainer, labelContinent, vizData); // On allume le globe
       initWolverineUI(); // On prépare le calque Wolverine
-      initHeroTitleAnimation(); // L'animation du titre Hero
+      initIntroTitleAnimation(); // L'animation du titre Intro
       initSplashTitleAnimation(); // L'animation du titre de l'overlay
 
       // Gestion de l'overlay de démarrage
@@ -50,6 +50,7 @@ async function init() {
 
             // On déverrouille l'audio
             primeAudio();
+            primeWolverineAudio();
 
             // On lance l'animation de sortie
             experienceOverlay.style.opacity = '0';
@@ -93,9 +94,9 @@ function initSplashTitleAnimation() {
 }
 
 // Animation du titre H1 de l'accueil
-function initHeroTitleAnimation() {
-   // On cible spécifiquement le H1 de la section hero
-   const titleElement = document.querySelector('.hero h1');
+function initIntroTitleAnimation() {
+   // On cible spécifiquement le H1 de la section intro
+   const titleElement = document.querySelector('.intro-header h1');
    if (titleElement) {
       const textContainer = titleElement.querySelector('span') || titleElement;
       const text = textContainer.textContent;
@@ -222,12 +223,24 @@ function updateViz(stepIndex) {
    const ratingsLayer = document.getElementById('ratings-layer');
    if (ratingsLayer) {
       if (stepIndex === 4) {
-         ratingsLayer.style.opacity = 1;
-         ratingsLayer.style.pointerEvents = "auto";
-         animateRatings(vizData.avgRating);
+         animate(ratingsLayer, {
+            opacity: 1,
+            scale: [0.5, 1],
+            duration: 800,
+            easing: 'easeOutQuart',
+            begin: () => {
+               ratingsLayer.style.pointerEvents = "auto";
+               animateRatings(vizData.avgRating);
+            }
+         });
       } else {
-         ratingsLayer.style.opacity = 0;
-         ratingsLayer.style.pointerEvents = "none";
+         animate(ratingsLayer, {
+            opacity: 0,
+            scale: 0.5,
+            duration: 500,
+            easing: 'easeInQuart',
+            complete: () => { ratingsLayer.style.pointerEvents = "none"; }
+         });
       }
    }
 
@@ -235,11 +248,21 @@ function updateViz(stepIndex) {
    const wolverineLayer = document.getElementById('wolverine-layer');
    if (wolverineLayer) {
       if (stepIndex === 5) {
-         wolverineLayer.style.opacity = 1;
-         wolverineLayer.style.pointerEvents = "auto";
+         animate(wolverineLayer, {
+            opacity: 1,
+            scale: [0.8, 1],
+            duration: 800,
+            easing: 'easeOutBack',
+            begin: () => { wolverineLayer.style.pointerEvents = "auto"; }
+         });
       } else {
-         wolverineLayer.style.opacity = 0;
-         wolverineLayer.style.pointerEvents = "none";
+         animate(wolverineLayer, {
+            opacity: 0,
+            scale: 0.8,
+            duration: 500,
+            easing: 'easeInQuart',
+            complete: () => { wolverineLayer.style.pointerEvents = "none"; }
+         });
       }
    }
 

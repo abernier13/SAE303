@@ -56,7 +56,7 @@ function processAllData(data) {
         totalDomesticPct += dom;
         totalForeignPct += foreign;
 
-        // Focus sur l'Action/Aventure pour l'étape 3
+        // Focus sur l'action/ aventure pour l'étape 3
         if (genresStr.includes('Action') || genresStr.includes('Adventure')) {
             actionRevenue += world;
         }

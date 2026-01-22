@@ -18,7 +18,7 @@
     <link rel="shortcut icon" type="image/svg" href="/img/svg/objets/cinema-alt-svgrepo-com.svg" />
 </head>
 <script>
-    // Script immédiat pour éviter le flash de l'overlay au refresh
+    // Script immédiat pour éviter l'affichage pendant une microseconde de l'overlay au refresh
     if (sessionStorage.getItem('experienceStarted') === 'true') {
         document.documentElement.classList.add('hide-overlay-immediately');
     }
@@ -35,9 +35,9 @@
         </div>
     </div>
     <!-- Section d'accueil -->
-    <header class="hero">
-        <div class="hero-content">
-            <div class="hero-graphic">
+    <header class="intro-header">
+        <div class="intro-content">
+            <div class="intro-graphic">
                 <!-- SVG du Terminator -->
                 <svg class="terminator-svg" viewBox="0 0 317.5 158.75" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(0,-217.62501)">
@@ -220,7 +220,7 @@
                     </g>
                 </svg>
             </div>
-            <div class="hero-text">
+            <div class="intro-text">
                 <h1>L'Ère du Box-Office</h1>
                 <p>Une plongée immersive dans les données du cinéma.</p>
                 <div class="scroll-indicator">Scrollez pour découvrir</div>
@@ -246,14 +246,14 @@
                     style="display: none;"></text>
                 <g id="chart-labels"></g>
 
-                <!-- Conteneurs pour l'étape 2 -->
+                <!-- Conteneurs pour l'étape 2-->
                 <g id="lightsaber-viz" style="opacity: 0; pointer-events: none;"></g>
                 <g id="logo-viz" style="opacity: 0; pointer-events: none;"></g>
 
                 <!-- Conteneur pour l'étape 4  -->
                 <g id="ratings-layer" style="opacity: 0; pointer-events: none;"></g>
 
-                <!-- Conteneur pour l'étape 5 (Wolverine) -->
+                <!-- Conteneur pour l'étape 5 -->
                 <g id="wolverine-layer" style="opacity: 0; pointer-events: none;"></g>
             </svg>
 
@@ -1192,8 +1192,7 @@
             <div class="step" data-step="5" style="height: 50vh;">
                 <div class="step-content">
                     <h2>L'Ère des Mutants</h2>
-                    <p>Wolverine et les X-Men ont redéfini le blockbuster moderne. Cliquez sur les griffes pour voir
-                        Logan !</p>
+                    <p>Wolverine et les X-Men ont redéfini le blockbuster moderne. Cliquez sur Logan !</p>
                 </div>
             </div>
         </article>

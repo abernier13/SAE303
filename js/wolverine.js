@@ -1,6 +1,17 @@
 import { animate } from 'https://esm.sh/animejs@4.2.2';
 import { svgLoganUnmasked, svgWolverineAction } from './constants.js';
 
+// Initialisation du son des griffes
+const wolverineSound = new Audio('./son/wolverine/WEAPSwrd_Epee (ID 0129)_LaSonotheque.fr.wav');
+
+// Fonction pour "amorcer" l'audio (appelée au clic sur le bouton start)
+export function primeWolverineAudio() {
+    wolverineSound.play().then(() => {
+        wolverineSound.pause();
+        wolverineSound.currentTime = 0;
+    }).catch(e => console.log("Wolverine audio priming pending..."));
+}
+
 let isShowingAction = false;
 
 export function initWolverineUI() {
@@ -27,6 +38,10 @@ export function initWolverineUI() {
 
 export function toggleWolverineState() {
     isShowingAction = !isShowingAction;
+
+    // On lance le son
+    wolverineSound.currentTime = 0;
+    wolverineSound.play().catch(e => console.log("Sound play failed:", e));
 
     const logan = document.querySelector('.wolverine-state-logan');
     const action = document.querySelector('.wolverine-state-action');

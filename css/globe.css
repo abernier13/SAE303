@@ -49,7 +49,7 @@
     pointer-events: none;
 }
 
-/* --- LE TOOLTIP (info sur le continent) --- */
+/* --- Tooltip (info sur le continent) --- */
 .viz-label-continent {
     position: fixed;
     top: 0;
