@@ -1,4 +1,4 @@
-// Traitement du fichier JSON.
+// Traitement du fichier JSON, pré-traitement des données et préparation des listes de films à afficher
 
 import { CONTINENT_MAP } from './constants.js';
 

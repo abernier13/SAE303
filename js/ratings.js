@@ -46,7 +46,7 @@ export function updateRatingsUI(avgRating, films = []) {
         glowColor = "rgba(0, 242, 254, 0.3)";
     }
 
-    // 0. Créer les gradients (defs)
+    // Créer les gradients (defs)
     const svgParent = container.closest('svg');
     let defs = svgParent.querySelector('defs');
     if (!defs) {
@@ -95,7 +95,7 @@ export function updateRatingsUI(avgRating, films = []) {
     clipPath.appendChild(wavePath);
     defs.appendChild(clipPath);
 
-    // 1. Étoile de fond
+    // Étoile de fond
     const bgStar = document.createElementNS("http://www.w3.org/2000/svg", "path");
     bgStar.setAttribute("d", pathStar);
     bgStar.classList.add('rating-star-bg');
@@ -105,7 +105,7 @@ export function updateRatingsUI(avgRating, films = []) {
     bgStar.style.transition = "stroke 0.8s ease";
     container.appendChild(bgStar);
 
-    // 2. Étoile de remplissage
+    // Étoile de remplissage
     const fgStar = document.createElementNS("http://www.w3.org/2000/svg", "path");
     fgStar.setAttribute("d", pathStar);
     fgStar.setAttribute("fill", "url(#liquid-gradient)");
@@ -113,7 +113,7 @@ export function updateRatingsUI(avgRating, films = []) {
     fgStar.style.filter = `drop-shadow(0 0 15px ${glowColor})`;
     container.appendChild(fgStar);
 
-    // 3. Infos du film
+    // Infos du film
     const textTitle = createSVGText(400, 310, film.title, "rating-film-title", "#fff", "28px", "bold");
     container.appendChild(textTitle);
 
@@ -124,7 +124,7 @@ export function updateRatingsUI(avgRating, films = []) {
     const textBudget = createSVGText(400, 420, `Budget: $${budgetMrd} Mrd`, "rating-budget", "#aaa", "20px");
     container.appendChild(textBudget);
 
-    // 4. Flèches de navigation
+    // Flèches de navigation
     const arrowLeft = createArrow(100, 350, true);
     const arrowRight = createArrow(700, 350, false);
 

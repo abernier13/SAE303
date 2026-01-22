@@ -1,5 +1,5 @@
 // Ce fichier regroupe toutes les données statiques qui prendraient trop de place ailleurs.
-// On y trouve les coordonnées pour le globe, les mappings de pays et les chemins SVG complexes.
+// On y trouve les coordonnées pour le globe, les mappings de pays et les chemins SVG simples.
 
 // Points GPS (Lat, Lon) pour dessiner les points rouges sur les continents au survol
 export const CONTINENT_DOTS = {
