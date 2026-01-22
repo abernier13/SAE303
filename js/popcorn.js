@@ -10,6 +10,12 @@ export function updatePopcornUI(genres) {
     const labelsLayer = document.getElementById('popcorn-labels-layer');
     if (labelsLayer) labelsLayer.innerHTML = '';
 
+    // Création d'un conteneur de définitions pour les masques de découpe
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    if (labelsLayer) {
+        labelsLayer.appendChild(defs);
+    }
+
     // Les IDs des bandes rouges dans le SVG (de gauche à droite)
     // Rotations calculées précisément pour être parallèles aux bords inclinés
     const configs = [
@@ -30,7 +36,6 @@ export function updatePopcornUI(genres) {
             if (polygon) {
                 polygon.classList.add('popcorn-stripe');
                 const scaleFactor = (genre.totalRevenue / maxRevenue);
-                polygon.setAttribute('data-target-scale', scaleFactor.toFixed(3));
 
                 // --- CALCULS DE POSITION ---
                 const points = polygon.getAttribute('points').trim().split(/\s+/).map(Number);
@@ -50,6 +55,24 @@ export function updatePopcornUI(genres) {
                 }
                 const centerX = countX > 0 ? sumX / countX : (minX + maxX) / 2;
                 const finalTopY = maxYVal - (maxYVal - minY) * scaleFactor;
+
+                // --- CRÉATION DU MASQUE DE DÉCOUPE (Pour éviter l'effet de perspective) ---
+                const clipId = `clip-popcorn-${index}`;
+                const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+                clipPath.setAttribute("id", clipId);
+                
+                const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                clipRect.classList.add('popcorn-clip-rect');
+                clipRect.setAttribute("x", minX - 10); // Marge de sécurité
+                clipRect.setAttribute("width", (maxX - minX) + 20);
+                // On stocke les valeurs cibles pour l'animation
+                clipRect.setAttribute("data-y-start", maxYVal);
+                clipRect.setAttribute("data-y-end", finalTopY);
+                clipRect.setAttribute("data-h-end", maxYVal - finalTopY);
+                
+                clipPath.appendChild(clipRect);
+                defs.appendChild(clipPath);
+                polygon.setAttribute("clip-path", `url(#${clipId})`);
 
                 // --- 1. ÉTIQUETTE REVENU (AU SOMMET) ---
                 const revenueMillions = (genre.totalRevenue / 1000000).toLocaleString('en-US', {
@@ -109,10 +132,10 @@ export function updatePopcornUI(genres) {
                 connector.setAttribute("y1", finalTopY);
                 connector.setAttribute("x2", listX - 10);
                 connector.setAttribute("y2", finalTopY);
-                connector.setAttribute("stroke", "white");
-                connector.setAttribute("stroke-width", "0.5");
+                connector.setAttribute("stroke", "orange");
+                connector.setAttribute("stroke-width", "2");
                 connector.setAttribute("stroke-dasharray", "4");
-                connector.setAttribute("opacity", "0.3");
+                connector.setAttribute("opacity", "0.5");
                 movieGroup.appendChild(connector);
 
                 const movieTitle = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -131,13 +154,19 @@ export function updatePopcornUI(genres) {
 }
 
 export function animatePopcorn() {
-    // 1. Les bandes grimpent
-    animate('.popcorn-stripe', {
-        scaleY: (el) => [0, el.getAttribute('data-target-scale') || 1],
-        opacity: [0, 1],
+    // 1. Les bandes grimpent (via le masque de découpe)
+    animate('.popcorn-clip-rect', {
+        y: [el => el.getAttribute('data-y-start'), el => el.getAttribute('data-y-end')],
+        height: [0, el => el.getAttribute('data-h-end')],
         easing: 'easeOutExpo',
         duration: 800,
         delay: stagger(100)
+    });
+
+    // On gère l'opacité de la bande elle-même
+    animate('.popcorn-stripe', {
+        opacity: [0, 1],
+        duration: 400
     });
 
     // 2. Les valeurs de revenus

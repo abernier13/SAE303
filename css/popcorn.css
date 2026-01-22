@@ -7,7 +7,7 @@
     left: 10%;
     width: 60rem;
     height: 110%;
-    transform: scale(1.4) translateX(-5%);
+    transform: scale(1.2) translateX(-7%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,10 +27,8 @@
 
 .popcorn-stripe {
     transition: opacity 0.3s ease;
-    transform-origin: center bottom;
-    transform-box: fill-box;
     opacity: 0;
-    transform: scaleY(0);
+    /* On retire le transform scaleY qui causait la déformation */
 }
 
 .popcorn-value-bg {
@@ -60,4 +58,3 @@
     text-anchor: end;
     /* Aligne le bas du texte vertical avec le point Y */
 }
-
